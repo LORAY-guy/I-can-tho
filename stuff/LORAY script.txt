@@ -1,0 +1,86 @@
+- Intro, part 1 : DONE
+"Hey, hello? It's me, LORAY! You're in, we did it! Now, the game transfer might have caused you some kind of short term memory loss or something, 
+so just in case, lemme remind you what's going on.
+I've transfered you from your original game to this minigame in order to track down Matpat.
+He knows we're after him, and I know that his last plannified hiding spot was going to be here,
+in the "You can't" minigame from Five Nights at Freddy's 3. Why this game? I don't know... But there's gotta be a reason.
+And since I can't be in a game, I need your help to find him for me.
+You are the only one that knows matpat as much as me, since you know, you've had a rap battle with him.
+Which is actually the reason why we're tracking him down in the first place.
+Now, you see, that rap battle was an absolute banger, so of course people started listening to it like crazy, *me included*, 
+but it also got multiple composers to make remixes of the song.
+Which, you know, really cool but these actually came with unexpected events.
+These remixes, when brought to life, would actually create some kind of... parallel universe or something like that, I don't know.
+Now, that wouldn't be so bad if there was like... 2 or 3 remixes... but we're talking ten times that right now, 
+and I'm almost positive that Matpat is the one responsible for such a complicated process.
+Long story short, we need to convince him to stop this happening or the universe is cooked.
+Uhm, now you're supposed to move around in this game, but I know that you can't normally do that so, lemme try something...
+Here, try walking."
+
+- Intro, part 2 : DONE
+"Yeah, that's uh... sliding but good enough,
+Okay, so to be able to find the key to Matpat's secret room, because, you know, he wouldn't just be sitting somewhere around here waiting for us with a cup of coffee or something,
+we need to trigger the ending cutscene of the minigame, which won't be easy apparently because he actually tempered with the game's code to prevent this.
+During the cutscene, one of the crying childs will drop the key to matpat's location. Though, we need to gain their trust.
+In order to do that, we need to dismantle all 4 animatronics in the pizzeria to free them from their souls.
+This is why i have given you this knife, try using it."
+
+- Intro, part 3 : DONE
+"Great! Now go down to the room below."
+
+- Intro, part 4 : DONE
+"Now, go to the room on your left."
+
+- Intro, part 5 : DONE
+"There they are! Well, this will be easy to do. Just get up the stage and get rid of... oh...
+yeah, i should have seen that one coming... Hold on, it seems the animatronics are now sentient... that's great...
+Though, I have their stats here, so I will give you all the intel about each animatronic as you meet them.
+There isn't much I can do to help you. But, if you need a guiding voice, I'll be right here."
+
+- Freddy: DONE
+"That's Freddy.
+He's pretty simple, but he's CRAZY fast.
+He can still outrun you on his base walking speed.
+Though he seems to take some time to determine your identity so the freddy mask will be your best friend for this guy."
+
+- Bonnie: DONE
+"That's Bonnie,
+He has a normal walking and chasing speed, but his vision seems to be advanced compared to the other animatronics.
+The freddy mask should help."
+
+- Chica: DONE
+"That's Chica,
+Be careful, she has a really quick reaction, so approach her slowly,
+because the moment she sees you, she'll already be in chase mode before you know it.
+The freddy mask won't be of much use unless you are quick.
+Don't worry too much tho, I can see here that her chase speed is really slow, you can outrun her pretty easily".
+
+- Foxy: DONE
+"That's Foxy,
+Oh yeah, Foxy! hey listen! Uh, that one was always a bit twitchy. Uh, I’m not sure the Freddy head trick will work on Foxy.
+Just make sure he doesn't see you, if he does, run away immediatly as there is no way to prevent him from attacking.
+He will take a lot of time to enter chase mode, which gives you plenty of time to run. But, he will change room everytime you get away."
+
+- Room 8, first time entering: DONE
+"Well I guess we've figured out where matpat was hiding... that was surprisingly easy coming from a actual genius... I'm beginning to think it could be bait tho."
+
+- Killed all the animatronics: DONE
+"Alright, that was the last one!
+Head over to the Afton cutscene room and lets comtemplate the classic scene once again.
+Lucky you, you'll be in the front row."
+
+- After afton gets killed: DONE
+"*laughs* no matter how many times you see it, it still hits the same way. Alright, enough glazing, just take the key and let's go find Matthew, we are so close...
+Whyyy are you not moving, what's happening?... They didn't drop the key?! Hold on, let me check... Yeah, they still have it, god damn it... 
+We've helped them and that's how they thank us? Unbelievable. *sigh* Alright, change of plan. We will need to find them all and convince them to drop the key.
+Since going the nice way doesn't seem to work, I guess we'll have to go the hard way. Now since they're souls, I'm afraid the knife won't work on them so forget about that.
+Instead, the best way I can possibly imagine you taking rid of them would be... eating them? Yeah... just pull a CaseOh move on them. That can work."
+
+- After eating first crying child: DONE
+"Yeah that's how eating works, I guess..."
+
+- After finding key: DONE
+"There it is, finally... just grab it and let's get over this..."
+
+- Room8, first time entering with key : DONE
+"*glitching* wait, what's going on? I'm losing signal! Keep going without me, I'll be fine. Just stop him."

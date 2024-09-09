@@ -13,7 +13,7 @@ class Room2 extends BaseRoom
 
     var exit1:Exit;
     var exit2:Exit;
-    var exit3:Exit;
+    public var exit3:Exit;
     var exit4:Exit;
 
     var unlockedExit:Bool = false;
@@ -48,6 +48,7 @@ class Room2 extends BaseRoom
 
         exit3 = new Exit('Room3', 0, wallTopLeft2.height, 1, Std.int(FlxG.height - (wallTopLeft2.height + wallBottomLeft2.height)), new FlxPoint(FlxG.width - ourple.width - 2, -1)); //Left Exit
         add(exit3);
+        exit3.locked = tutorialMode;
         exits.push(exit3);
 
         exit4 = new Exit('Room6', FlxG.width - 2, wallBottomRight2.height, 1, Std.int(FlxG.height - (wallTopRight2.height + wallBottomRight2.height)), new FlxPoint(2, -1)); //Right Exit
@@ -59,6 +60,8 @@ class Room2 extends BaseRoom
     override function onLoad():Void
     {
         super.onLoad();
+
+        phone.playMessage('tutorialPart5');
 
         if (!unlockedExit && !tutorialMode)
         {

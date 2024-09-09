@@ -22,7 +22,7 @@ class AmbienceManager
         FlxG.sound.defaultSoundGroup.add(soundPlayer);
 
         new FlxTimer().start(5, function(tmr:FlxTimer) {
-            if (soundPlayer != null && !soundPlayer.playing && FlxG.random.bool(20)) {
+            if (soundPlayer != null && !soundPlayer.playing && FlxG.random.bool(15)) {
                 playAmbienceSound();
             }
         }, 0);
@@ -30,7 +30,7 @@ class AmbienceManager
 
     public function playMusic():Void
     {
-        var musicFolder:Array<String> = FileSystem.readDirectory('assets/music/game').filter(music -> music.contains(Paths.SOUND_EXT));
+        var musicFolder:Array<String> = FileSystem.readDirectory('assets/music/game');
         var selectedMusic:String = musicFolder[FlxG.random.int(0, musicFolder.length - 1)];
         selectedMusic = selectedMusic.split('.' + Paths.SOUND_EXT)[0];
         musicPlayer.loadEmbedded(Paths.music('game/$selectedMusic'));
@@ -38,15 +38,19 @@ class AmbienceManager
         playingMusic = true;
         musicPlayer.fadeIn(2, 0, (DEFAULT_VOLUME * UserPrefs.data.musicVolume) * factor);
 
-        var fadeStart:Float = musicPlayer.length - 5000;
+        var fadeStart:Float = (musicPlayer.length / 1000) - 5;
         if (fadeStart > 0) {
-            fadeTween = FlxTween.tween(musicPlayer, {volume: 0}, 5, {startDelay: fadeStart / 1000});
+            fadeTween = FlxTween.tween(musicPlayer, {volume: 0}, 5, {startDelay: fadeStart});
         }
 
-        musicPlayer.onComplete = function() {
-            if (playingMusic) {
+        musicPlayer.onComplete = function() 
+        {
+            if (playingMusic)
+            {
                 new FlxTimer().start(FlxG.random.float(10, 20), function(tmr:FlxTimer) {
-                    playMusic();
+                    if (playingMusic) { //rechecking just in case it changed mid way through the timer
+                        playMusic();
+                    }
                 });
             }
         };
@@ -54,7 +58,8 @@ class AmbienceManager
 
     public function playCrumblingDreams():Void
     {
-        if (musicPlayer.playing) {
+        if (musicPlayer.playing) 
+        {
             playingMusic = false;
             fadeTween.cancel();
             musicPlayer.stop();
@@ -77,7 +82,7 @@ class AmbienceManager
 
     public function playAmbienceSound():Void
     {
-        var ambienceFolder:Array<String> = FileSystem.readDirectory('assets/sounds/ambience').filter(sound -> sound.contains(Paths.SOUND_EXT));
+        var ambienceFolder:Array<String> = FileSystem.readDirectory('assets/sounds/ambience');
         var selectedAmbience:String = ambienceFolder[FlxG.random.int(0, ambienceFolder.length - 1)];
         selectedAmbience = selectedAmbience.split('.' + Paths.SOUND_EXT)[0];
         soundPlayer.loadEmbedded(Paths.sound('ambience/$selectedAmbience'));
@@ -112,18 +117,38 @@ class AmbienceManager
         }
     }
 
+    public function stopMusic(?time:Float = 0):Void
+    {
+        if (musicPlayer != null && musicPlayer.playing) {
+            if (time > 0) {
+                musicPlayer.fadeOut(time, 0, function(twn:FlxTween) {
+                    musicPlayer.onComplete = null;
+                    musicPlayer.stop();
+                    playingMusic = false;
+                    fadeTween.cancel();
+                });
+            } else {
+                musicPlayer.onComplete = null;
+                musicPlayer.stop();
+                playingMusic = false;
+                fadeTween.cancel();
+            }
+        }
+    }
+
     public function adjustMusicVolume(newFactor:Float, ?time:Float = 1):Void
     {
-        factor = newFactor;
-        if (musicPlayer != null) {
+        if (musicPlayer != null && musicPlayer.playing) {
+            factor = newFactor;
             musicPlayer.fadeOut(time, (DEFAULT_VOLUME * UserPrefs.data.musicVolume) * factor);
         }
     }
 
     public function resetMusicVolume(?time:Float = 1):Void
     {
-        if (musicPlayer != null) {
-            musicPlayer.fadeOut(time, (DEFAULT_VOLUME * UserPrefs.data.musicVolume) * factor);
+        if (musicPlayer != null && musicPlayer.playing) {
+            musicPlayer.fadeIn(time, musicPlayer.volume, (DEFAULT_VOLUME * UserPrefs.data.musicVolume) * factor);
+            factor = 1;
         }
     }
 

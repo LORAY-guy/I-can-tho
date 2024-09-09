@@ -48,7 +48,14 @@ class RoomFinale2 extends BaseRoom
         exits.push(exit);
         add(exit);
 
-        var exit2:Exit = new Exit('RoomFinale3', FlxG.width - 2, wallTopRight.height, 1, Std.int(FlxG.height - (wallBottomRight.height * 2)), new FlxPoint(2, -1)); //Right Exit
+        var exit2:Exit = new Exit('RoomFinale2', FlxG.width - 2, wallTopRight.height, 1, Std.int(FlxG.height - (wallBottomRight.height * 2)), new FlxPoint(-1, -1)); //Right Exit
+        exit2.callback = function() {
+            PlayState.instance.disableEverything();
+            for (camera in FlxG.cameras.list) {
+                camera.visible = false;
+            }
+            FlxG.switchState(new FinalCutsceneState(PlayState.instance.timer.getTimeElapsed()));
+        }
         add(exit2);
         exits.push(exit2);
     }
@@ -56,6 +63,6 @@ class RoomFinale2 extends BaseRoom
     override function onLoad():Void
     {
         super.onLoad();
-        ambienceManager.updateCrumblingDreams(0.4, 0.7);
+        if (ambienceManager != null && ambienceManager.musicPlayer.volume != 0.7) ambienceManager.updateCrumblingDreams(0.4, 0.7);
     }
 }

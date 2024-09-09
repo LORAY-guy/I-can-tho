@@ -6,7 +6,6 @@ import flixel.graphics.FlxGraphic;
 import openfl.display.BitmapData;
 import openfl.utils.AssetType;
 import openfl.utils.Assets as OpenFlAssets;
-import openfl.system.System;
 
 import lime.utils.Assets;
 import flash.media.Sound;
@@ -20,6 +19,7 @@ import flash.media.Sound;
  */
 class Paths {
     inline public static var SOUND_EXT = #if web "mp3" #else "ogg" #end;
+    inline public static var VIDEO_EXT = "mp4";
 
     public static var localTrackedAssets:Array<String> = [];
     public static var currentTrackedAssets:Map<String, FlxGraphic> = [];
@@ -112,6 +112,11 @@ class Paths {
 
     inline static public function imageRandom(key:String, min:Int, max:Int) {
         return image(key + FlxG.random.int(min, max));
+    }
+
+    inline static public function video(key:String)
+    {
+        return 'assets/videos/$key.$VIDEO_EXT';
     }
 
     static public function cacheBitmap(file:String, ?bitmap:BitmapData = null, ?allowGPU:Bool = true):FlxGraphic {
@@ -220,8 +225,6 @@ class Paths {
                         image(key);
                     case 'sound':
                         sound(key);
-                    case 'music':
-                        music(key);
                 }
             }
         }

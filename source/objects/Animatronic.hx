@@ -6,7 +6,7 @@ package objects;
  */
 class Animatronic extends FlxSprite
 {
-    private var name:String;
+    public var name:String;
     private var walkSpeed:Int;
     private var chaseSpeed:Int;
     private var viewDistance:Float;
@@ -146,8 +146,10 @@ class Animatronic extends FlxSprite
     {
         var dx:Float = player.x - this.x;
         var dy:Float = player.y - this.y;
+        var dw:Float = player.width - this.width;
+        var dh:Float = player.height - this.height;
     
-        var distanceToPlayer:Float = Math.sqrt(dx * dx + dy * dy + ((player.height / 2) - (this.height / 2)) * ((player.height / 2) - (this.height / 2)));
+        var distanceToPlayer:Float = Math.sqrt((dx * dx) + (dy * dy) + (dw * dw) + (dh * dh));
         if (distanceToPlayer > viewDistance) return false;
 
         var angleToPlayer:Float = CoolUtil.radiansToDegrees(Math.atan2(dy, dx));
@@ -163,7 +165,7 @@ class Animatronic extends FlxSprite
             case "Right":
                 currentFacingAngle = 0;
         }
-    
+
         angleToPlayer = CoolUtil.wrapAngle(angleToPlayer);
         currentFacingAngle = CoolUtil.wrapAngle(currentFacingAngle);
         
@@ -177,7 +179,7 @@ class Animatronic extends FlxSprite
     private function playerSneakingUp():Bool
     {
         if (player != null && !player.dead && !canSeePlayer()) {
-            return FlxMath.distanceBetween(this, player) < 132; // Basically, you have 32 pixels window to kill the animatronic. Get too close, and you fucking die.
+            return FlxMath.distanceBetween(this, player) < 135; // Basically, you have 45 pixels window to kill the animatronic. Get too close, and you fucking die.
         }
         return false;
     }
@@ -396,7 +398,7 @@ class Animatronic extends FlxSprite
 
     private function checkKillPlayer():Void
     {
-        if (!dead && (chasing || (!chasing && !player.maskOn)) && FlxMath.distanceBetween(this, player) < 100) {
+        if (!dead && (chasing || (!chasing && !player.maskOn)) && FlxMath.distanceBetween(this, player) < 90) {
             PlayState.instance.gameOver();
         }
     }
@@ -437,20 +439,20 @@ class Animatronic extends FlxSprite
             PlayState.instance.allAnimatronics.remove(this);
             PlayState.instance.currentRoom.removeAnimatronic(this);
 
-            if (PlayState.instance.allAnimatronics.length == 0 && !PlayState.instance.aftonCutscene)
-            {
+            if (PlayState.instance.allAnimatronics.length == 0 && !PlayState.instance.aftonCutscene) {
                 PlayState.instance.aftonCutscene = true;
-                if (PlayState.instance.room8 != null && PlayState.instance.room8.exit1 != null) {
-                    PlayState.instance.room8.exit1.locked = false;
-                }
+                PlayState.instance.room8.exit1.locked = false;
+                PlayState.instance.phone.playMessage('killedAllAnimatronics', true, true);
+            } else if (PlayState.instance.phone.curPlayed == name.toLowerCase() + 'Intro') {
+                PlayState.instance.phone.muteCall();
             }
 
             if (UserPrefs.data.endlessMode) {
-                new FlxTimer().start(10, function(tmr:FlxTimer) {
-                    FlxTween.tween(this, {alpha: 0}, 2, {
-                        ease: FlxEase.quadOut,
+                new FlxTimer().start(5, function(tmr:FlxTimer) {
+                    FlxTween.tween(this.corpseImage, {alpha: 0}, 5, {
+                        ease: FlxEase.linear,
                         onComplete: function(twn:FlxTween) {
-                            destroy();
+                            corpseImage.destroy();
                             //Respawn it for endless mode
                         }
                     });
@@ -465,10 +467,10 @@ class Animatronic extends FlxSprite
     {
         if (chasing)
         {
-            if (velocity.x == 0 && velocity.y == 0) {
+            if (velocity.isZero()) {
                 animation.play("Idle");
             } else {
-                if (Math.abs(velocity.x) > Math.abs(velocity.y)) {
+                if (Math.abs(velocity.x) >= Math.abs(velocity.y)) {
                     if (velocity.x > 0) animation.play("Right");
                     else animation.play("Left");
                 } else {

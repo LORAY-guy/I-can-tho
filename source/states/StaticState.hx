@@ -33,21 +33,20 @@ class StaticState extends FlxUIState
 
     private function loadAssets():Void
     {
-        var loadText:FlxText = new FlxText(0, 0, FlxG.width, 'LOADING...', 24);
-        loadText.setFormat(Paths.font('fnaf3.ttf'), 24, FlxColor.LIME, CENTER);
-        loadText.screenCenter();
-        add(loadText);
-
         UserPrefs.loadPrefs();
 
         if(FlxG.save.data != null && FlxG.save.data.fullscreen) {
             FlxG.fullscreen = FlxG.save.data.fullscreen;
         }
 
-        if (UserPrefs.data.preCache && !loaded) {
+        /**if (UserPrefs.data.preCache && !loaded) {
             Paths.cacheAllAssets();
             loaded = true;
-        }
+        }**/
+
+        #if !mobile
+        Main.fpsVar.visible = UserPrefs.data.showFPS;
+        #end
 
         FlxG.switchState(new PlayState());
     }

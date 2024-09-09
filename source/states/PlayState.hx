@@ -69,9 +69,8 @@ class PlayState extends FlxUIState
     public var stormSound:FlxSound = new FlxSound();
     public var allAnimatronics:Array<Animatronic> = [];
     public var allChilds:Array<CryingChild> = [];
-    var pausedSounds:Array<FlxSound> = [];
 
-    public var phone:PhoneCall = new PhoneCall();
+    public var phone:PhoneCall;
     public var ambienceManager:AmbienceManager = new AmbienceManager();
     public var timer:Timer;
 
@@ -85,9 +84,6 @@ class PlayState extends FlxUIState
 
     override public function create():Void
     {
-        Paths.clearStoredMemory();
-		Paths.clearUnusedMemory();
-
         super.create();
 
         instance = this;
@@ -118,7 +114,7 @@ class PlayState extends FlxUIState
         staminaBar.scrollFactor.set();
         add(staminaBar);
 
-        tutorialControls = new FlxText(0, ourple.y + ourple.height + 25, 275);
+        tutorialControls = new FlxText(0, ourple.y + ourple.height + 25, 0);
         tutorialControls.setFormat(Paths.font('fnaf.ttf'), 72, FlxColor.WHITE, CENTER);
         tutorialControls.text = 
             UserPrefs.keyBinds.get('up')[0].toString() + '\n' +
@@ -126,6 +122,7 @@ class PlayState extends FlxUIState
             UserPrefs.keyBinds.get('right')[0].toString() + '\n' +
             UserPrefs.keyBinds.get('down')[0].toString();
         tutorialControls.screenCenter(X);
+        tutorialControls.visible = false;
         add(tutorialControls);
 
         hudAssets = new FlxSpriteGroup();
@@ -181,6 +178,10 @@ class PlayState extends FlxUIState
         cameraID.alpha = 0;
         hudAssets.add(cameraID);
 
+        phone = new PhoneCall();
+        phone.cameras = [camHUD];
+        add(phone);
+
         pauseCamera = new FlxSprite();
         pauseCamera.cameras = [camPause];
         pauseCamera.frames = Paths.getSparrowAtlas('pause/cameraFlip');
@@ -195,6 +196,7 @@ class PlayState extends FlxUIState
             } else {
                 paused = true;
                 persistentDraw = false;
+                FlxG.sound.defaultSoundGroup.pause();
                 openSubState(new options.OptionsState());
             }
         };
@@ -243,10 +245,13 @@ class PlayState extends FlxUIState
             bonnie.placeAnimatronic("Room3", 375, 150);
             freddy.placeAnimatronic("Room3", 582, 165);
             chica.placeAnimatronic("Room3", 775, 160);
+            ourple.caseOhMode = true;
+            ourple.lockedControls = true;
         } else {
             room3.seenAnimatronicsOnStage = true;
             new FlxTimer().start(0.75, function(tmr:FlxTimer) {
                 enableAnimatronics();
+                ambienceManager.playMusic();
             });
         }
 
@@ -351,7 +356,7 @@ class PlayState extends FlxUIState
             else updateAnimatronicLayers();
 
             updateCameraIDVisibility();
-    
+
             if (glitchLine != null && glitchLine.y > FlxG.height + glitchLine.height * 1.75) {
                 glitchLine.y = -glitchLine.height;
             }
@@ -431,10 +436,6 @@ class PlayState extends FlxUIState
         }
 
         room3.unlockTutorialExits();
-
-        new FlxTimer().start(FlxG.random.float(2, 3), function(tmr:FlxTimer) {
-            PlayState.instance.ambienceManager.playMusic();
-        });
     }
 
     public function enableCryingChilds():Void
@@ -501,8 +502,11 @@ class PlayState extends FlxUIState
                 insert(members.indexOf(ourple) + 2, currentRoom.waterDrops);
 
                 for (animatronic in currentRoom.animatronics) {
-                    remove(animatronic, true);
-                    insert(members.indexOf(ourple), animatronic);
+                    if (!animatronic.tutorialMode) {
+                        remove(animatronic, true);
+                        insert(members.indexOf(ourple), animatronic);
+                        phone.playMessage(animatronic.name.toLowerCase() + 'Intro', true, true);
+                    }
                 }
 
                 currentRoom.checkForGoldenFreddy();
@@ -540,8 +544,7 @@ class PlayState extends FlxUIState
     
     private function updateStaminaBarVisibility():Void
     {
-        if ((ourple.velocity.x == 0 && ourple.velocity.y == 0 && ourple.currentStamina == ourple.MAX_STAMINA) ||
-            (!controls.SPRINT && ourple.currentStamina == ourple.MAX_STAMINA)) {
+        if ((ourple.velocity.isZero() || !controls.SPRINT) && ourple.currentStamina == ourple.MAX_STAMINA) {
             staminaBar.alpha -= fadeSpeed * FlxG.elapsed;
             if (staminaBar.alpha < 0) staminaBar.alpha = 0;
         } else {
@@ -555,6 +558,7 @@ class PlayState extends FlxUIState
         if (!ourple.dead)
         {
             ourple.dead = true;
+            CoolUtil.deathCounter++;
             ourple.lockedControls = true;
             ourple.setPosition(5000, 5000); // Doing like all 3D games do when they don't want something to be in a accessible area
             if (ourple.breathing.playing) {
@@ -567,8 +571,12 @@ class PlayState extends FlxUIState
         }
     }
 
-    private function disableEverything():Void
+    public function disableEverything():Void
     {
+        for (camera in FlxG.cameras.list) {
+            camera.visible = false;
+        }
+
         if (cryingChildMode) {
             for (child in allChilds) {
                 if (child != null) {
@@ -626,6 +634,7 @@ class PlayState extends FlxUIState
 
         paused = false;
         persistentDraw = true;
+        FlxG.sound.defaultSoundGroup.resume();
         FlxG.sound.play(Paths.sound('camera'), 0.7).endTime = 750;
         pauseCamera.animation.play('Idle', false, true);
     }
@@ -634,13 +643,7 @@ class PlayState extends FlxUIState
     {
         vintage.visible = true;
 
-        for (sound in FlxG.sound.defaultSoundGroup.sounds) {
-            if (sound.playing) {
-                sound.pause();
-                pausedSounds.push(sound);
-            }
-        }
-
+        FlxG.sound.defaultSoundGroup.pause();
         if (ambienceManager != null) ambienceManager.pause(true);
 
         paused = true;
@@ -656,8 +659,7 @@ class PlayState extends FlxUIState
     {
         vintage.visible = false;
 
-        for (sound in pausedSounds) sound.play();
-        pausedSounds = [];
+        FlxG.sound.defaultSoundGroup.resume();
         ambienceManager.resume(true);
 
         paused = false;

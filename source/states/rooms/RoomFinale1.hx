@@ -22,7 +22,7 @@ class RoomFinale1 extends BaseRoom
         sealedDoor.flipX = true;
         sealedDoor.screenCenter(Y);
         sealedDoor.immovable = true;
-        props.push(sealedDoor);
+        walls.push(sealedDoor);
         add(sealedDoor);
 
         var matpatDoor:FlxSprite = new FlxSprite().loadGraphic(Paths.image('map/matpatDoor'));
@@ -31,7 +31,6 @@ class RoomFinale1 extends BaseRoom
         matpatDoor.x = 3;
         matpatDoor.screenCenter(Y);
         matpatDoor.immovable = true;
-        props.push(sealedDoor);
         add(matpatDoor);
 
         var stain1:FlxSprite = new FlxSprite(280, 185).loadGraphic(Paths.image('map/inkStain'));
@@ -64,8 +63,10 @@ class RoomFinale1 extends BaseRoom
         super.onLoad();
 
         if (!ambienceManager.playingCrumblingDreams) {
-            FlxG.sound.play(Paths.sound('keyUnlock'));
+            PlayState.instance.stormSound.volume = 0.7;
+            FlxG.sound.play(Paths.sound('keyUnlock'), 0.4);
             PlayState.instance.ourple.allowSprint = false;
+            PlayState.instance.staminaBar.visible = false;
             ambienceManager.playCrumblingDreams();
             PlayState.instance.creepyFilter.visible = true;
         } else {

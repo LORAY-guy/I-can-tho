@@ -2,7 +2,7 @@ package states.rooms;
 
 class Room1 extends BaseRoom
 {
-    var exit:Exit;
+    public var exit:Exit;
 
     override function create():Void
     {
@@ -36,7 +36,7 @@ class Room1 extends BaseRoom
 
         exit = new Exit('Room2', leftWall.width, FlxG.height - 1, Std.int(FlxG.width - (leftWall.width + rightWall.width)), 1, new FlxPoint(-1, 2));
         add(exit);
-        //exit.locked = true;
+        exit.locked = tutorialMode;
         exits.push(exit);
     }
 }

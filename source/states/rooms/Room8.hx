@@ -64,4 +64,12 @@ class Room8 extends BaseRoom
         add(exit4);
         exits.push(exit4);
     }
+
+    override function onLoad():Void
+    {
+        super.onLoad();
+        if (animatronics.length == 0) { //Would skip the room8entrance dialogue if an animatronic was in the room
+            phone.playMessage(ourple.hasKey ? 'losingSignal' : 'room8entrance', !ourple.hasKey);
+        }
+    }
 }

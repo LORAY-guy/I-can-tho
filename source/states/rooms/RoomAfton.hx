@@ -11,7 +11,7 @@ class RoomAfton extends BaseRoom
     var wallBottomRight:FlxSprite;
     var wallBottomRight2:FlxSprite;
 
-    var exit:Exit;
+    public var exit:Exit;
 
     //Cutscene stuff
     var afton:FlxSprite;
@@ -81,6 +81,7 @@ class RoomAfton extends BaseRoom
         bloodPool.immovable = true;
         bloodPool.visible = false;
         onTopOfOurple.add(bloodPool);
+        props.push(bloodPool);
         add(bloodPool);
 
         aftonCorpse = new FlxSprite(952, 416).loadGraphic(Paths.image('characters/AftonDead'));
@@ -89,6 +90,17 @@ class RoomAfton extends BaseRoom
         onTopOfOurple.add(aftonCorpse);
         props.push(aftonCorpse);
         add(aftonCorpse);
+
+        afton = new FlxSprite(220, 280);
+        afton.frames = Paths.getSparrowAtlas('characters/Afton');
+        afton.animation.addByPrefix('Idle', 'Idle', 1, false);
+        afton.animation.addByPrefix('Running', 'Running', 14, true);
+        afton.animation.addByPrefix('Laughing', 'Laughing', 2, true);
+        afton.animation.addByPrefix('Dying', 'Dying0', 12, true);
+        afton.animation.addByPrefix('DyingMore', 'DyingMore', 8, true);
+        afton.animation.addByPrefix('DyingEvenMore', 'DyingEvenMore', 6, true);
+        afton.animation.addByPrefix('HeDeadChat', 'HeDeadChat', 1, false);
+        add(afton);
 
         child1 = createFakeChild(145, 350);
         fakeChilds.push(child1);
@@ -125,16 +137,6 @@ class RoomAfton extends BaseRoom
             exit.locked = true;
             ourple.lockedControls = true;
 
-            afton = new FlxSprite(220, 280);
-            afton.frames = Paths.getSparrowAtlas('characters/Afton');
-            afton.animation.addByPrefix('Idle', 'Idle', 1, false);
-            afton.animation.addByPrefix('Running', 'Running', 14, true);
-            afton.animation.addByPrefix('Laughing', 'Laughing', 2, true);
-            afton.animation.addByPrefix('Dying', 'Dying0', 12, true);
-            afton.animation.addByPrefix('DyingMore', 'DyingMore', 8, true);
-            afton.animation.addByPrefix('DyingEvenMore', 'DyingEvenMore', 6, true);
-            afton.animation.addByPrefix('HeDeadChat', 'HeDeadChat', 1, false);
-            PlayState.instance.insert(PlayState.instance.members.indexOf(ourple) - 1, afton);
             afton.animation.play('Running');
             afton.animation.callback = function(name:String, frame:Int, frameIndex:Int)
             {
@@ -146,32 +148,39 @@ class RoomAfton extends BaseRoom
                     }
                 }
             };
+
+            if (phone.player.playing) phone.muteCall();
         }
     }
 
     private function startCutscene():Void 
     {
         afton.animation.callback = null;
+        ambienceManager.stopMusic(2);
         afton.animation.play('Idle');
-        new FlxTimer().start(2.5, function(tmr:FlxTimer) {
+        new FlxTimer().start(2.5, function(tmr:FlxTimer) 
+        {
             afton.animation.play('Laughing');
-            afton.animation.callback = function(name:String, frame:Int, frameIndex:Int) {
+            afton.animation.callback = function(name:String, frame:Int, frameIndex:Int) 
+            {
                 if (frame == 1) {
                     FlxG.sound.play(Paths.sound('laugh'), 0.6);
                 }
             };
-            new FlxTimer().start(3, function(tmr:FlxTimer) {
+            new FlxTimer().start(3, function(tmr:FlxTimer) 
+            {
                 afton.animation.callback = null;
                 afton.animation.play('Dying');
 
-                new FlxTimer().start(0.0625, function(tmr:FlxTimer) {
+                new FlxTimer().start(0.0625, function(tmr:FlxTimer) 
+                {
                     var bloodParticle:FlxSprite = new FlxSprite().makeGraphic(25, 25, FlxColor.RED);
                     var bloodXPos:Float = afton.x + (afton.width / 2 - bloodParticle.width / 2);
                     var bloodYPos:Float = afton.y + (afton.height / 2 - bloodParticle.height / 2);
                     bloodParticle.x = bloodXPos + FlxG.random.float(-10, 10);
                     bloodParticle.y = bloodYPos + FlxG.random.float(-10, 10);
                     bloodParticle.velocity.set(FlxG.random.float(-200, 200), 100);
-                    PlayState.instance.insert(PlayState.instance.members.indexOf(afton) + 1, bloodParticle);
+                    PlayState.instance.insert(99, bloodParticle);
                     new FlxTimer().start(0.75, function(tmr:FlxTimer) {
                         PlayState.instance.remove(bloodParticle, true);
                         bloodParticle.destroy();
@@ -179,7 +188,8 @@ class RoomAfton extends BaseRoom
                 }, 32);
 
                 FlxG.sound.play(Paths.sound('killAnimatronic'), 0.7);
-                new FlxTimer().start(4, function(tmr:FlxTimer) {
+                new FlxTimer().start(4, function(tmr:FlxTimer)
+                {
                     afton.animation.play('DyingMore');
                     FlxG.sound.play(Paths.sound('insuit'), 0.7);
                     new FlxTimer().start(3, function(tmr:FlxTimer) {
@@ -208,17 +218,16 @@ class RoomAfton extends BaseRoom
                 child.alpha = 1 - 0.25 * tmr.elapsedLoops;
             }
 
-            if (tmr.elapsedLoops == 5) {
+            if (tmr.elapsedLoops == 5) 
+            {
                 for (child in fakeChilds) {
                     remove(child, true);
                     fakeChilds.remove(child);
                 }
 
-                exit.locked = false;
-                ourple.lockedControls = false;
-                ourple.caseOhMode = true;
                 PlayState.instance.aftonCutscene = false;
                 PlayState.instance.enableCryingChilds();
+                phone.playMessage('endCutscene');
             }
         }, 5);
     }

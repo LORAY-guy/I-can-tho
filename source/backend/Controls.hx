@@ -1,8 +1,5 @@
 package backend;
 
-import flixel.input.gamepad.FlxGamepadInputID;
-import flixel.input.keyboard.FlxKey;
-
 /**
  * ### Controls
  * 

@@ -26,7 +26,7 @@ class FPSCounter extends TextField
 		currentFPS = 0;
 		selectable = false;
 		mouseEnabled = false;
-		defaultTextFormat = new TextFormat(Paths.font('fnaf3.ttf'), 14, 0xFFFFFFFF);
+		defaultTextFormat = new TextFormat("assets/fonts/fnaf3.ttf", 14, 0xFFFFFFFF);
 		autoSize = LEFT;
 		multiline = false;
 		text = "FPS: ";

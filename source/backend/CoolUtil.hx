@@ -8,6 +8,7 @@ package backend;
 class CoolUtil 
 {
 	public static var tutorialMode:Bool = true;
+	public static var deathCounter:Int = 0;
 
     @:access(flixel.util.FlxSave.validate)
 	inline public static function getSavePath():String {
@@ -15,14 +16,6 @@ class CoolUtil
 		// #if (flixel < "5.0.0") return company; #else
 		return '${company}/${flixel.util.FlxSave.validate(FlxG.stage.application.meta.get('file'))}';
 		// #end
-	}
-
-    inline public static function browserLoad(site:String) {
-		#if linux
-		Sys.command('/usr/bin/xdg-open', [site]);
-		#else
-		FlxG.openURL(site);
-		#end
 	}
 
 	inline public static function radiansToDegrees(radians:Float):Float
@@ -88,7 +81,7 @@ class CoolUtil
 		}
 	}
 
-	public static function collidesWithProps(animatronic:Animatronic):Bool
+	inline public static function collidesWithProps(animatronic:Animatronic):Bool
 	{
 		for (prop in PlayState.instance.currentRoom.props) {
 			if (FlxCollision.pixelPerfectCheck(animatronic, prop)) {
@@ -98,7 +91,7 @@ class CoolUtil
 		return false;
 	}
 	
-	public static function collidesWithWalls(animatronic:Animatronic):Bool
+	inline public static function collidesWithWalls(animatronic:Animatronic):Bool
 	{
 		for (wall in PlayState.instance.currentRoom.walls) {
 			if (FlxCollision.pixelPerfectCheck(animatronic, wall)) {
@@ -106,5 +99,30 @@ class CoolUtil
 			}
 		}
 		return false;
+	}
+
+	public static function elapsedToDisplay(elapsedTime:Float):String
+	{
+		var hours:Int = Math.floor(elapsedTime / 3600);
+		var minutes:Int = Math.floor(elapsedTime / 60) - (60 * hours);
+		var seconds:Int = Math.floor(elapsedTime % 60);
+		var milliseconds:Int = Math.floor((elapsedTime % 1) * 100);
+		return (hours >= 1 ? StringTools.lpad(Std.string(hours), "0", 2) + ":" : "") +
+				StringTools.lpad(Std.string(minutes), "0", 2) + ":" +
+				StringTools.lpad(Std.string(seconds), "0", 2) +
+				(hours < 1 ? "." + StringTools.lpad(Std.string(milliseconds), "0", 2) : "");
+	}
+
+	public static function exitGame():Void
+	{
+		#if windows
+		Sys.exit(0);
+		#elseif html5
+		js.Browser.window.close();
+		#elseif linux
+		Sys.command("pkill Lore Origins");
+		#elseif mac
+		Sys.command("pkill -f Lore Origins");
+		#end
 	}
 }

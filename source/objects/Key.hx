@@ -14,7 +14,7 @@ class Key extends FlxSprite
     {
         if (PlayState.instance.controls.INTERACT_P && FlxMath.distanceBetween(PlayState.instance.ourple, this) < 100) {
             PlayState.instance.ourple.hasKey = true;
-            FlxG.sound.play(Paths.sound('collectKey'));
+            FlxG.sound.play(Paths.sound('collectKey'), 0.9);
             destroy();
         }
     }

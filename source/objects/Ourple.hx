@@ -44,6 +44,7 @@ class Ourple extends FlxSprite
         updateHitbox();
 
         breathing.loadEmbedded(Paths.sound('deepbreaths'), true);
+        FlxG.sound.defaultSoundGroup.add(breathing);
         breathing.volume = 0;
     }
 
@@ -88,9 +89,6 @@ class Ourple extends FlxSprite
             
                     if (velocity.y == 0 && !PlayState.instance.controls.STAB_P) {
                         animation.play("Idle");
-                    } else if (PlayState.instance.tutorialControls != null && (velocity.x != 0 || velocity.y != 0)) {
-                        PlayState.instance.tutorialControls.destroy();
-                        PlayState.instance.tutorialControls = null;
                     }
         
                     if (PlayState.instance.controls.STAB_P) {
@@ -133,13 +131,13 @@ class Ourple extends FlxSprite
             animation.play("MaskOn");
             breathing.play();
             breathing.fadeIn(1, 0, 0.7);
-            FlxG.sound.play(Paths.sound('maskon'), 0.6);
+            FlxG.sound.play(Paths.sound('maskon'), 0.45);
             velocity.set(0, 0);
         } else {
             animation.play("Idle");
             breathing.stop();
             breathing.volume = 0;
-            FlxG.sound.play(Paths.sound('maskoff'), 0.6);
+            FlxG.sound.play(Paths.sound('maskoff'), 0.45);
         }
     }
 
@@ -152,6 +150,8 @@ class Ourple extends FlxSprite
                 if (FlxMath.distanceBetween(this, child) < 110) 
                 {
                     child.stunned = true;
+                    child.escaping = false;
+                    child.velocity.zero();
                     child.changeFacingDirectionTimer.cancel();
                     child.trickTimer.cancel();
                     child.faceDirection(true);
@@ -214,6 +214,11 @@ class Ourple extends FlxSprite
             lockedControls = false;
             animation.finishCallback = null;
             animation.callback = null;
+
+            if (name == "Grab") {
+                if (PlayState.instance.allChilds.length == 0) PlayState.instance.phone.playMessage('foundKey');
+                else PlayState.instance.phone.playMessage('caseOhMove');
+            }
         }
     }
 

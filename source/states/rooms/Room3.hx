@@ -60,13 +60,15 @@ class Room3 extends BaseRoom
     {
         super.onLoad();
 
+        phone.playMessage('tutorialPart6', false);
+
         if (!seenAnimatronicsOnStage)
         {
             var flickeringSound:FlxSound = new FlxSound();
             flickeringSound.loadEmbedded(Paths.sound('flickeringMono'), false);
             flickeringSound.volume = 0.7;
 
-            new FlxTimer().start(2, function(tmr:FlxTimer) {
+            new FlxTimer().start(4, function(tmr:FlxTimer) {
                 flickeringSound.play();
                 ourple.lockedControls = true;
                 FlxFlicker.flicker(PlayState.instance.flicker, 1, 0.25, true, false, function(flick:FlxFlicker) {
@@ -77,7 +79,7 @@ class Room3 extends BaseRoom
                         FlxTween.tween(PlayState.instance.flicker, {alpha: 0}, 1, {onComplete: function(twn:FlxTween) {
                             PlayState.instance.flicker.destroy();
                             flickeringSound.destroy();
-                            ourple.lockedControls = false;
+                            PlayState.instance.phone.muteButton.visible = true;
                         }});
                     });
                 }, function(flick:FlxFlicker) {

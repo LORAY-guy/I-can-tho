@@ -12,7 +12,7 @@ class CryingChild extends FlxSprite
 {
     private var walkSpeed:Int = 120;
     private var escapeSpeed:Int = 165;
-    private var viewDistance:Float = 750;
+    private var viewDistance:Float = 1000;
     private var reactionTime:Float = 0.5;
     private var timeToChangeDirection:Float = 2;
 
@@ -125,8 +125,10 @@ class CryingChild extends FlxSprite
     {
         var dx:Float = player.x - this.x;
         var dy:Float = player.y - this.y;
-    
-        var distanceToPlayer:Float = Math.sqrt(dx * dx + dy * dy + ((player.height / 2) - (this.height / 2)) * ((player.height / 2) - (this.height / 2)));
+        var dw:Float = player.width - this.width * 2;
+        var dh:Float = player.height - this.height * 2;
+
+        var distanceToPlayer:Float = Math.sqrt((dx * dx) + (dy * dy) + (dw * dw) + (dh * dh));
         if (distanceToPlayer > viewDistance) return false;
 
         var angleToPlayer:Float = CoolUtil.radiansToDegrees(Math.atan2(dy, dx));
@@ -145,12 +147,11 @@ class CryingChild extends FlxSprite
     
         angleToPlayer = CoolUtil.wrapAngle(angleToPlayer);
         currentFacingAngle = CoolUtil.wrapAngle(currentFacingAngle);
-        
-        var angleThreshold:Float = 85;
+
         var angleDifference:Float = Math.abs(angleToPlayer - currentFacingAngle);
         angleDifference = CoolUtil.wrapAngle(angleDifference);
         
-        return angleDifference <= angleThreshold;
+        return angleDifference <= 90;
     }
 
     private function startTrickTimer():Void
@@ -389,7 +390,7 @@ class CryingChild extends FlxSprite
         if (PlayState.instance.allChilds.length == 0 && PlayState.instance.cryingChildMode)
         {
             PlayState.instance.cryingChildMode = false;
-            PlayState.instance.currentRoom.add(new Key(this.x, this.y));
+            PlayState.instance.currentRoom.add(new Key(this.x + this.width / 2, this.y + this.height / 2));
         }
 
         destroy();
@@ -399,15 +400,15 @@ class CryingChild extends FlxSprite
     {
         if (escaping)
         {
-            if (velocity.x == 0 && velocity.y == 0) {
+            if (velocity.isZero()) {
                 animation.play("Idle");
             } else {
                 if (Math.abs(velocity.x) > Math.abs(velocity.y)) {
-                    if (velocity.x > 0) animation.play("Right");
-                    else animation.play("Left");
+                    if (velocity.x >= 0) animation.play("Right");
+                    else if (velocity.x < 0) animation.play("Left");
                 } else {
-                    if (velocity.y > 0) animation.play("Down");
-                    else animation.play("Up");
+                    if (velocity.y >= 0) animation.play("Down");
+                    else if (velocity.y < 0) animation.play("Up");
                 }
             }
         }

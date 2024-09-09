@@ -27,11 +27,6 @@ class OptionsState extends FlxSubState
     private var framerateSlider:FlxUISlider;
     private var precacheCheck:Checkbox;
 
-    public function new():Void
-    {
-        super();
-    }
-
     override function create():Void
     {
         super.create();
@@ -83,7 +78,6 @@ class OptionsState extends FlxSubState
         musicVolumeSlider.callback = function(value:Float) {
             UserPrefs.data.musicVolume = value;
             PlayState.instance.ambienceManager.resetMusicVolume();
-            FlxG.sound.play(Paths.sound('select'));
         };
         musicVolumeSlider.nameLabel.text = 'Music Volume';
         musicVolumeSlider.nameLabel.size = 16;
@@ -140,15 +134,14 @@ class OptionsState extends FlxSubState
                 FlxG.updateFramerate = newFramerate;
                 FlxG.drawFramerate = newFramerate;
             }
-            FlxG.sound.play(Paths.sound('select'));
         };
         framerateSlider.nameLabel.text = 'Framerate';
         framerateSlider.nameLabel.size = 16;
         graphicsPanel.add(framerateSlider);
 
-        precacheCheck = new Checkbox(0, framerateSlider.y + 100, 'Precache all assets when loading the game', 'preCache', UserPrefs.data.preCache);
+        /**precacheCheck = new Checkbox(0, framerateSlider.y + 100, 'Precache all assets when loading the game', 'preCache', UserPrefs.data.preCache);
         precacheCheck.screenCenter(X);
-        graphicsPanel.add(precacheCheck);
+        graphicsPanel.add(precacheCheck);**/
         #end
 
         currentPanel = controlsPanel;
@@ -173,14 +166,13 @@ class OptionsState extends FlxSubState
 
     private function switchPanel(panel:FlxSpriteGroup):Void
     {
+        UserPrefs.saveSettings();
         if (currentPanel != panel)
         {
             remove(currentPanel);
             currentPanel = panel;
             add(currentPanel);
         }
-        UserPrefs.saveSettings();
-        UserPrefs.loadPrefs();
     }
 
     override function update(elapsed:Float):Void
@@ -220,10 +212,9 @@ class OptionsState extends FlxSubState
         var yOffset:Int = 80;
         var xLeft:Int = 50;
         var xRight:Int = Std.int(FlxG.width / 2 + 25);
+        var orderedKeys:Array<String> = ['up', 'left', 'down', 'right', 'sprint', 'mask', 'stab', 'interact'];
     
         // Display keyBinds (Keyboard Controls) on the left side
-        var orderedKeys:Array<String> = ['up', 'left', 'down', 'right', 'sprint', 'interact', 'mask', 'stab'];
-    
         for (key in orderedKeys)
         {
             if (UserPrefs.keyBinds.exists(key))
@@ -283,7 +274,6 @@ class OptionsState extends FlxSubState
     override function close():Void
     {
         UserPrefs.saveSettings();
-        UserPrefs.loadPrefs();
         super.close();
     }
 }

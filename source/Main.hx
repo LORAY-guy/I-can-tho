@@ -6,6 +6,10 @@ import openfl.events.Event;
 import openfl.display.StageScaleMode;
 import lime.app.Application;
 
+#if !mobile
+import debug.FPSCounter;
+#end
+
 #if linux
 import lime.graphics.Image;
 @:cppInclude('./external/gamemode_client.h')
@@ -18,10 +22,6 @@ import lime.graphics.Image;
 import openfl.events.UncaughtErrorEvent;
 import haxe.CallStack;
 import haxe.io.Path;
-#end
-
-#if !mobile
-import debug.FPSCounter;
 #end
 
 class Main extends Sprite

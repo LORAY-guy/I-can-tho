@@ -28,14 +28,23 @@ class AmbienceManager
         }, 0);
     }
 
-    public function playMusic():Void
+    public function playMusic(?name:String):Void
     {
-        var musicFolder:Array<String> = FileSystem.readDirectory('assets/music/game');
-        var selectedMusic:String = musicFolder[FlxG.random.int(0, musicFolder.length - 1)];
-        selectedMusic = selectedMusic.split('.' + Paths.SOUND_EXT)[0];
+        var selectedMusic:String;
+        if (name != null) {
+            selectedMusic = name;
+        } else {
+            var musicFolder:Array<String> = FileSystem.readDirectory('assets/music/game');
+            musicFolder.remove('void.${Paths.SOUND_EXT}');
+            selectedMusic = musicFolder[FlxG.random.int(0, musicFolder.length - 1)];
+            selectedMusic = selectedMusic.split('.' + Paths.SOUND_EXT)[0];
+        }
         musicPlayer.loadEmbedded(Paths.music('game/$selectedMusic'));
         musicPlayer.play();
         playingMusic = true;
+        #if FLX_PITCH
+        if (PlayState.instance.ourple.caseOhMode) musicPlayer.pitch = 0.75;
+        #end
         musicPlayer.fadeIn(2, 0, (DEFAULT_VOLUME * UserPrefs.data.musicVolume) * factor);
 
         var fadeStart:Float = (musicPlayer.length / 1000) - 5;
@@ -43,7 +52,7 @@ class AmbienceManager
             fadeTween = FlxTween.tween(musicPlayer, {volume: 0}, 5, {startDelay: fadeStart});
         }
 
-        musicPlayer.onComplete = function() 
+        musicPlayer.onComplete = function()
         {
             if (playingMusic)
             {
@@ -68,6 +77,7 @@ class AmbienceManager
         musicPlayer.loadEmbedded(Paths.music('crumblingDreams'), true);
         musicPlayer.pan = 0.75;
         musicPlayer.volume = 0.4;
+        #if FLX_PITCH musicPlayer.pitch = 1; #end
         musicPlayer.onComplete = null;
         musicPlayer.play();
         musicPlayer.looped = true;

@@ -360,8 +360,8 @@ class PlayState extends FlxUIState
             if (glitchLine != null && glitchLine.y > FlxG.height + glitchLine.height * 1.75) {
                 glitchLine.y = -glitchLine.height;
             }
-    
-            if (canPause && ((FlxG.mouse.overlaps(cameraID) && FlxG.mouse.justMoved) || controls.PAUSE)) {
+
+            if (canPause && ((FlxG.mouse.overlaps(cameraID) && FlxG.mouse.deltaScreenY > 0) || controls.PAUSE)) {
                 canPause = false;
                 FlxG.sound.play(Paths.sound('camera'), 0.7).endTime = 750;
                 pauseCamera.visible = true;

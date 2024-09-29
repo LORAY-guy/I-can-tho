@@ -4,6 +4,7 @@ import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.FlxGraphic;
 
 import openfl.display.BitmapData;
+import openfl.display3D.textures.RectangleTexture;
 import openfl.utils.AssetType;
 import openfl.utils.Assets as OpenFlAssets;
 
@@ -120,19 +121,36 @@ class Paths {
     }
 
     static public function cacheBitmap(file:String, ?bitmap:BitmapData = null, ?allowGPU:Bool = true):FlxGraphic {
-        if (bitmap == null) {
-            if (OpenFlAssets.exists(file, IMAGE))
-                bitmap = OpenFlAssets.getBitmapData(file);
-
-            if (bitmap == null) return null;
-        }
-
-        localTrackedAssets.push(file);
-        var newGraphic:FlxGraphic = FlxGraphic.fromBitmapData(bitmap, false, file);
-        newGraphic.persist = true;
-        newGraphic.destroyOnNoUse = false;
-        currentTrackedAssets.set(file, newGraphic);
-        return newGraphic;
+		if(bitmap == null)
+            {
+                #if MODS_ALLOWED
+                if (FileSystem.exists(file))
+                    bitmap = BitmapData.fromFile(file);
+                else
+                #end
+                {
+                    if (OpenFlAssets.exists(file, IMAGE))
+                        bitmap = OpenFlAssets.getBitmapData(file);
+                }
+    
+                if(bitmap == null) return null;
+            }
+    
+            localTrackedAssets.push(file);
+            if (allowGPU && UserPrefs.data.cacheOnGPU)
+            {
+                var texture:RectangleTexture = FlxG.stage.context3D.createRectangleTexture(bitmap.width, bitmap.height, BGRA, true);
+                texture.uploadFromBitmapData(bitmap);
+                bitmap.image.data = null;
+                bitmap.dispose();
+                bitmap.disposeImage();
+                bitmap = BitmapData.fromTexture(texture);
+            }
+            var newGraphic:FlxGraphic = FlxGraphic.fromBitmapData(bitmap, false, file);
+            newGraphic.persist = true;
+            newGraphic.destroyOnNoUse = false;
+            currentTrackedAssets.set(file, newGraphic);
+            return newGraphic;
     }
 
     static public function getTextFromFile(key:String):String {

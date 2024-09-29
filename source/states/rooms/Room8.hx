@@ -69,7 +69,7 @@ class Room8 extends BaseRoom
     {
         super.onLoad();
         if (animatronics.length == 0) { //Would skip the room8entrance dialogue if an animatronic was in the room
-            phone.playMessage(ourple.hasKey ? 'losingSignal' : 'room8entrance', !ourple.hasKey);
+            phone.playMessage(ourple.hasKey ? 'losingSignal' : 'room8entrance', !ourple.hasKey, ourple.hasKey);
         }
     }
 }

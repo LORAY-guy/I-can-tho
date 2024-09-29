@@ -81,26 +81,6 @@ class CoolUtil
 		}
 	}
 
-	inline public static function collidesWithProps(animatronic:Animatronic):Bool
-	{
-		for (prop in PlayState.instance.currentRoom.props) {
-			if (FlxCollision.pixelPerfectCheck(animatronic, prop)) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	inline public static function collidesWithWalls(animatronic:Animatronic):Bool
-	{
-		for (wall in PlayState.instance.currentRoom.walls) {
-			if (FlxCollision.pixelPerfectCheck(animatronic, wall)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 	public static function elapsedToDisplay(elapsedTime:Float):String
 	{
 		var hours:Int = Math.floor(elapsedTime / 3600);
@@ -120,9 +100,9 @@ class CoolUtil
 		#elseif html5
 		js.Browser.window.close();
 		#elseif linux
-		Sys.command("pkill Lore Origins");
+		Sys.command('pkill "I can, tho"');
 		#elseif mac
-		Sys.command("pkill -f Lore Origins");
+		Sys.command('pkill -f "I can, tho"');
 		#end
 	}
 }

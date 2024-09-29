@@ -7,10 +7,10 @@
 	<!--Minimum without FLX_NO_GAMEPAD: 11.8, without FLX_NO_NATIVE_CURSOR: 11.2-->
 	<set name="SWF_VERSION" value="11.8" />
 
-    <!-- ______________________ PIZZASCAPE CUSTOMIZATION ______________________ -->
+    <!-- ______________________ I CAN, THO CUSTOMIZATION ______________________ -->
 
 	<define name="VIDEOS_ALLOWED" if="desktop" unless="32bits"/>
-	<define name="DISCORD_ALLOWED" if="desktop" />
+	<define name="DISCORD_ALLOWED" if="desktop" unless="linux"/>
 
 	<!-- ____________________________ Window Settings ___________________________ -->
 
@@ -39,7 +39,7 @@
     <!-- __________________________ Game Assets & Etc. __________________________ -->
 	
 	<!-- Turn on Crash Handler -->
-	<define name="CRASH_HANDLER" if="desktop" />
+	<define name="CRASH_HANDLER" if="desktop" unless="linux"/>
 
 	<!-- Assets -->
 	<library name="fonts" preload="true" />
@@ -63,11 +63,9 @@
 	<haxelib name="flixel" />
 	<haxelib name="flixel-ui" />
 	<haxelib name="flixel-addons" />
-	<haxelib name="tjson" />
 
     <haxelib name="hxdiscord_rpc" if="DISCORD_ALLOWED"/>
-    <haxelib name="hxCodec" if="VIDEOS_ALLOWED"/>
-	<haxelib name="away3d" />
+	<haxelib name="hxCodec" if="VIDEOS_ALLOWED" />
 
 	<!-- Disable Discord IO Thread -->
 	<haxedef name="DISCORD_DISABLE_IO_THREAD" if="hxdiscord_rpc" />

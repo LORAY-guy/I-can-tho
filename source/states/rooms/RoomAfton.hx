@@ -171,6 +171,8 @@ class RoomAfton extends BaseRoom
             {
                 afton.animation.callback = null;
                 afton.animation.play('Dying');
+                ambienceManager.playMusic('void');
+                ambienceManager.adjustMusicVolume(1, 0);
 
                 new FlxTimer().start(0.0625, function(tmr:FlxTimer) 
                 {

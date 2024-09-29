@@ -39,10 +39,10 @@ class StaticState extends FlxUIState
             FlxG.fullscreen = FlxG.save.data.fullscreen;
         }
 
-        /**if (UserPrefs.data.preCache && !loaded) {
+        if (UserPrefs.data.cacheOnGPU && !loaded) {
             Paths.cacheAllAssets();
             loaded = true;
-        }**/
+        }
 
         #if !mobile
         Main.fpsVar.visible = UserPrefs.data.showFPS;

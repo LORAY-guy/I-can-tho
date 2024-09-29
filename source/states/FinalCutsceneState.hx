@@ -56,7 +56,7 @@ class FinalCutsceneState extends FlxUIState
             return;
 		}, true);
 		#else
-		FlxG.log.warn('Platform not supported!');
+		trace('Platform not supported!');
 		return;
 		#end
     }

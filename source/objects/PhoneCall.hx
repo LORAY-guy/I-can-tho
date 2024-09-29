@@ -173,8 +173,8 @@ class PhoneCall extends FlxSprite
             case 'tutorialPart3':
                 setupTutorial(
                     function() { 
-                        game.tutorialControls.destroy();
-                        game.tutorialControls = null;
+                        //game.tutorialControls.destroy();
+                        //game.tutorialControls = null;
                         playMessage('tutorialPart4'); 
                     },
                     function() { 
@@ -196,12 +196,28 @@ class PhoneCall extends FlxSprite
                 game.ambienceManager.playMusic();
 
             case 'endCutscene':
-                PlayState.instance.roomAfton.exit.locked = false;
+                game.roomAfton.exit.locked = false;
                 game.ourple.caseOhMode = true;
                 game.ourple.lockedControls = false;
+
+                var knife:FlxSprite = new FlxSprite(game.ourple.x + game.ourple.width / 2, game.ourple.y + game.ourple.height / 2).loadGraphic(Paths.image('knife'));
+                knife.scale.set(1.6, 1.6);
+                game.currentRoom.add(knife);
+                FlxG.sound.play(Paths.sound('land'), 0.9);
+
                 game.ambienceManager.playMusic();
-                #if FLX_PITCH game.ambienceManager.musicPlayer.pitch = 0.75; #end
-                game.ambienceManager.resetMusicVolume();
+                game.ambienceManager.resetMusicVolume(0);
+            
+            case 'foundKey':
+                setupTutorial(
+                    null,
+                    function() {
+                        game.tutorialControls.text = UserPrefs.keyBinds.get('interact')[0].toString() + ' / ' + UserPrefs.gamepadBinds.get('interact')[0].toString();
+                        game.tutorialControls.screenCenter();
+                        game.tutorialControls.visible = true;
+                        return game.ourple.hasKey;
+                    }
+                );
         }
 
         muteButton.visible = false;
@@ -216,7 +232,7 @@ class PhoneCall extends FlxSprite
         keyFunction = function() {
             game.tutorialControls.visible = false;
             checkForTutorialControls = null;
-            keyFunc();
+            if (keyFunc != null) keyFunc();
         };
         checkForTutorialControls = checkFunc;
     }

@@ -25,7 +25,7 @@ class OptionsState extends FlxSubState
     private var showTimerCheckBox:Checkbox;
     private var showFPSCheckBox:Checkbox = null;
     private var framerateSlider:FlxUISlider;
-    private var precacheCheck:Checkbox;
+    private var gpuCacheCheck:Checkbox;
 
     override function create():Void
     {
@@ -126,9 +126,9 @@ class OptionsState extends FlxSubState
         graphicsTitle.setPosition(FlxG.width - graphicsTitle.width - 5, 10);
         graphicsPanel.add(graphicsTitle);
 
-        framerateSlider = new FlxUISlider(UserPrefs.data, 'framerate', 434, 100, 15, 240, 400, 40, 8, FlxColor.GRAY, FlxColor.WHITE);
+        framerateSlider = new FlxUISlider(UserPrefs.data, 'framerate', 434, 100, 30, 240, 400, 40, 8, FlxColor.GRAY, FlxColor.WHITE);
         framerateSlider.callback = function(value:Float) {
-            if (value >= 15) {
+            if (value >= 30) {
                 var newFramerate:Int = Std.int(value);
                 UserPrefs.data.framerate = newFramerate;
                 FlxG.updateFramerate = newFramerate;
@@ -139,9 +139,9 @@ class OptionsState extends FlxSubState
         framerateSlider.nameLabel.size = 16;
         graphicsPanel.add(framerateSlider);
 
-        /**precacheCheck = new Checkbox(0, framerateSlider.y + 100, 'Precache all assets when loading the game', 'preCache', UserPrefs.data.preCache);
-        precacheCheck.screenCenter(X);
-        graphicsPanel.add(precacheCheck);**/
+        gpuCacheCheck = new Checkbox(0, framerateSlider.y + 100, 'GPU Caching', 'cacheOnGPU', UserPrefs.data.cacheOnGPU);
+        gpuCacheCheck.screenCenter(X);
+        graphicsPanel.add(gpuCacheCheck);
         #end
 
         currentPanel = controlsPanel;
@@ -173,6 +173,7 @@ class OptionsState extends FlxSubState
             currentPanel = panel;
             add(currentPanel);
         }
+        UserPrefs.loadPrefs();
     }
 
     override function update(elapsed:Float):Void
@@ -274,6 +275,7 @@ class OptionsState extends FlxSubState
     override function close():Void
     {
         UserPrefs.saveSettings();
+        UserPrefs.loadPrefs();
         super.close();
     }
 }

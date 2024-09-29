@@ -14,6 +14,7 @@ import flixel.input.gamepad.FlxGamepadInputID;
 	public var showTimer:Bool = false;
 	public var preCache:Bool = true;
 	public var musicVolume:Float = 1;
+	public var cacheOnGPU:Bool = true;
 }
 
 /**
@@ -122,7 +123,7 @@ class UserPrefs {
 
 		if(FlxG.save.data.framerate == null) {
 			final refreshRate:Int = FlxG.stage.application.window.displayMode.refreshRate;
-			data.framerate = Std.int(FlxMath.bound(refreshRate, 15, 240));
+			data.framerate = (refreshRate > 30 ? Std.int(FlxMath.bound(refreshRate, 30, 240)) : 60);
 		}
 
 		if(data.framerate > FlxG.drawFramerate)

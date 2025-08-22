@@ -65,9 +65,10 @@ class PhoneCall extends FlxSprite
 
     private function ring():Void
     {
-        ringing = visible = true;
+        ringing = visible = FlxG.mouse.visible = true;
         animation.play('Calling');
         phoneVibration.loadEmbedded(Paths.sound('phoneVibration'), true);
+        phoneVibration.group = FlxG.sound.defaultSoundGroup;
         phoneVibration.play();
 
         //In case the player doesn't understand that you have a pick up the phone by clicking
@@ -117,8 +118,8 @@ class PhoneCall extends FlxSprite
         super.update(elapsed);
 
         if (animation.curAnim.name == 'Call' && FlxG.mouse.overlaps(this) && FlxG.mouse.justPressed) FlxG.sound.play(Paths.sound('error'), 0.7);
-        if (ringing && FlxG.mouse.overlaps(this) && FlxG.mouse.justPressed) pickUp(); 
-        if (muteButton.visible && FlxG.mouse.overlaps(muteButton) && FlxG.mouse.justPressed) muteCall();
+        if (ringing && ((FlxG.mouse.overlaps(this) && FlxG.mouse.justPressed) || (FlxG.gamepads.anyJustPressed(FlxGamepadInputID.A)))) pickUp();
+        if (muteButton.visible && ((FlxG.mouse.overlaps(muteButton) && FlxG.mouse.justPressed) || game.controls.MUTE_P)) muteCall();
 
         if (player.playing) {
             if (this.overlaps(game.ourple)) alpha = 0.5;
@@ -130,16 +131,17 @@ class PhoneCall extends FlxSprite
         }
     }
 
-    /**Not actually muting, just skipping, because it wouldn't trigger the callback of the end of the message that is being played.*/
+    /**Not actually muting, just skipping, because it wouldn't trigger the callback of the end of the message that is being played otherwise.*/
     public function muteCall():Void
     {
         if (player.playing) {
+            game.ambienceManager.resetMusicVolume(0.1);
             player.time = player.length - 1;
             muteButton.visible = false;
             visible = false;
         }
     }
-
+    
     private function getCallbackFromName(name:String):Void 
     {
         switch (name)
@@ -239,6 +241,11 @@ class PhoneCall extends FlxSprite
 
     override function destroy():Void
     {
+        if (phoneVibration != null) {
+            phoneVibration.stop();
+            phoneVibration.destroy();
+            phoneVibration = null;
+        }
         FlxG.sound.defaultSoundGroup.remove(player);
         player.stop();
         player.destroy();

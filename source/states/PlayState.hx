@@ -7,14 +7,14 @@ package states;
  * - Game elements creation.
  * - Update.
  * - Controls.
- * - Room transition.
+ * - Room transitions.
  */
 class PlayState extends FlxUIState
 {
     public var controls(get, never):Controls;
     private function get_controls() return Controls.instance;
 
-    public static var instance:PlayState;
+    public static var instance:PlayState = null;
 
     //CAMERAS
     public var camHUD:FlxCamera;
@@ -248,6 +248,8 @@ class PlayState extends FlxUIState
             ourple.caseOhMode = true;
             ourple.lockedControls = true;
         } else {
+            ourple.lockedControls = false;
+            ourple.caseOhMode = false;
             room3.seenAnimatronicsOnStage = true;
             new FlxTimer().start(0.75, function(tmr:FlxTimer) {
                 enableAnimatronics();
@@ -307,7 +309,7 @@ class PlayState extends FlxUIState
         roomsFinale.push(roomFinale1);
         roomsFinale.push(roomFinale2);
 
-        //Establishing neighbors (for footstep sound)
+        //Establishing neighbors (for footstep sound direction)
         //This is the best I can do with this "engine" for this mechanic
         room1.leftRooms = [room3, room5, roomFoxyCurtain, room9, roomPartsAndService, roomCorridorLeft, roomSupplyCloset, roomCornerLeft, office];
         room2.leftRooms = [room1, room3, room5, roomFoxyCurtain, room9, roomPartsAndService, roomCorridorLeft, roomSupplyCloset, roomCornerLeft, office];
@@ -326,7 +328,7 @@ class PlayState extends FlxUIState
         roomCornerRight.leftRooms = [room3, room5, roomFoxyCurtain, room9, roomPartsAndService, roomCorridorLeft, roomSupplyCloset, roomCornerLeft, office];
         office.leftRooms = [room3, room5, roomFoxyCurtain, room9, roomPartsAndService, roomCorridorLeft, roomSupplyCloset, roomCornerLeft];
 
-        //Animatronic spawn offsets (because I hate having fucking animatronics in the fucking walls)
+        //Animatronic spawn offsets (because I hate having animatronics in the fucking walls)
         room4.animatronicSpawnOffset = new FlxPoint(0, -50);
         room5.animatronicSpawnOffset = new FlxPoint(0, -50);
         room7.animatronicSpawnOffset = new FlxPoint(0, -50);
@@ -563,7 +565,6 @@ class PlayState extends FlxUIState
             ourple.setPosition(5000, 5000); // Doing like all 3D games do when they don't want something to be in a accessible area
             if (ourple.breathing.playing) {
                 ourple.breathing.stop();
-                ourple.breathing.volume = 0; //Just in case... Cuz it still plays sometimes
             }
     
             disableEverything();
@@ -652,6 +653,10 @@ class PlayState extends FlxUIState
             if (stuff != vintage && Std.isOfType(stuff, FlxObject)) stuff.active = false;
         }
 
+        for (waterDrop in currentRoom.waterDrops) {
+            waterDrop.active = false;
+        }
+
         super.onFocusLost();
     }
 
@@ -668,6 +673,18 @@ class PlayState extends FlxUIState
             if (stuff != vintage && Std.isOfType(stuff, FlxObject)) stuff.active = true;
         }
 
+        for (waterDrop in currentRoom.waterDrops) {
+            waterDrop.active = true;
+        }
+
         super.onFocus();
+    }
+
+    override public function destroy():Void
+    {
+        super.destroy();
+
+        if (instance == this)
+            instance = null;
     }
 }

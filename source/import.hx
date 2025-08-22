@@ -1,5 +1,5 @@
 #if !macro
-//Discord API
+// Discord API
 #if DISCORD_ALLOWED
 import backend.Discord;
 #end
@@ -15,7 +15,7 @@ import sys.io.*;
 import js.html.*;
 #end
 
-//Game stuff
+// Game stuff
 import backend.UserPrefs;
 import backend.Paths;
 import backend.Controls;
@@ -26,7 +26,7 @@ import options.*;
 import states.*;
 import states.rooms.*;
 
-//Flixel
+// Flixel
 import flixel.sound.FlxSound;
 import flixel.addons.ui.FlxUIState;
 import flixel.FlxSubState;
@@ -54,7 +54,7 @@ import flixel.util.FlxCollision;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.keyboard.FlxKey;
 
-//OpenFL
+// OpenFL
 import openfl.Lib;
 import openfl.Assets;
 import openfl.display.Bitmap;

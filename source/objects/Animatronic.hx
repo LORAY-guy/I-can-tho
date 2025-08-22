@@ -2,7 +2,7 @@ package objects;
 
 /**
  * ### Animatronic
- * Creates an animatronic "IA" (prob the worst IA you've ever seen).
+ * Creates an animatronic "IA".
  */
 class Animatronic extends FlxSprite
 {
@@ -141,11 +141,11 @@ class Animatronic extends FlxSprite
         return currentRoom == PlayState.instance.currentRoom;
     }
 
-    /**Oh brother...**/
+    //Oh brother...
     private function canSeePlayer():Bool
     {
         var dx:Float = player.x - this.x;
-        var dy:Float = player.y - this.y;
+        var dy:Float = player.y + (player.height / 2) - this.y;
         var dw:Float = player.width - this.width;
         var dh:Float = player.height - this.height;
     
@@ -196,7 +196,7 @@ class Animatronic extends FlxSprite
         PlayState.instance.currentRoom.insert(PlayState.instance.currentRoom.members.indexOf(this) + 10, exclamation);
         FlxTween.tween(exclamation, {y: exclamation.y - 10}, 0.4, {ease: FlxEase.cubeOut});
     
-        FlxG.sound.play(Paths.sound('spotted'), 0.7) #if FLX_PITCH .pitch = FlxG.random.float(0.8, 1.2); #end
+        FlxG.sound.play(Paths.sound('windowscare'), 0.7) #if FLX_PITCH .pitch = FlxG.random.float(0.8, 1.2); #end
 
         PlayState.instance.ambienceManager.adjustMusicVolume(0.5);
     
@@ -292,11 +292,12 @@ class Animatronic extends FlxSprite
     {
         trickTimer.cancel();
         if (runningSound != null && runningSound.playing) runningSound.stop();
-        isFacingPlayer = false; //Actually necessary lol
+        isFacingPlayer = false;
         chasing = false;
         if (velocity != null && !velocity.isZero()) velocity.zero();
+
         PlayState.instance.ambienceManager.resume();
-        PlayState.instance.ambienceManager.resetMusicVolume();
+        PlayState.instance.ambienceManager.resetMusicVolume(0.5);
     }
 
     public function repositionToNewRoom(playFootstep:Bool = true):Void
@@ -421,13 +422,12 @@ class Animatronic extends FlxSprite
                 var explosion:FlxSprite = new FlxSprite(corpseImage.x + 55, corpseImage.y - 65);
                 explosion.frames = Paths.getSparrowAtlas("explosion");
                 explosion.animation.addByPrefix("boom", "explosion idle", 20, false);
-                explosion.animation.finishCallback = function(boom) {
-                    explosion.destroy();
-                    explosion = null;
-                };
-                explosion.animation.play("boom");
                 explosion.scale.set(1.4, 1.4);
                 explosion.updateHitbox();
+                explosion.animation.play("boom");
+                explosion.animation.finishCallback = function(boom) {
+                    explosion.visible = false;
+                };
                 currentRoom.add(explosion);
     
                 FlxG.sound.play(Paths.sound("explosion"), 0.6);
@@ -453,7 +453,7 @@ class Animatronic extends FlxSprite
                         ease: FlxEase.linear,
                         onComplete: function(twn:FlxTween) {
                             corpseImage.destroy();
-                            //Respawn it for endless mode
+                            //Respawn it for (possible) upcoming endless mode
                         }
                     });
                 });

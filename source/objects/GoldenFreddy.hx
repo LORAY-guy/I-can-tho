@@ -22,28 +22,24 @@ class GoldenFreddy extends FlxSprite
         });
     }
 
-    override function update(elapsed:Float):Void
+    override public function update(elapsed:Float):Void
     {
         PlayState.instance.ambienceManager.musicPlayer.volume = 1 - aahSound.volume;
         timeSeenGolden += elapsed;
-        if (timeSeenGolden >= 1.5 && timeSeenGolden <= 1.51) {
+        if (timeSeenGolden >= 1.5 && timeSeenGolden <= 1.51)
             loadGraphic(Paths.image('characters/goldenMad'));
-        }
 
         super.update(elapsed);
     }
 
-    override function destroy():Void
+    override public function destroy():Void
     {
-        if (!aahSound.fadeTween.finished) {
+        if (!aahSound.fadeTween.finished)
             aahSound.fadeTween.cancel();
-        }
         aahSound.destroy();
 
-        if (!PlayState.instance.ourple.dead && PlayState.instance.ambienceManager.musicPlayer != null) {
+        if (!PlayState.instance.ourple.dead && PlayState.instance.ambienceManager.musicPlayer != null)
             PlayState.instance.ambienceManager.resetMusicVolume();
-        }
-
         PlayState.instance.currentRoom.goldenFreddy = null;
 
         super.destroy();

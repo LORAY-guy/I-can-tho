@@ -54,9 +54,8 @@ class BaseRoom extends FlxTypedGroup<FlxBasic>
 		this.roomName = roomName;
 
 		new FlxTimer().start(2, function(tmr:FlxTimer) {
-			if (FlxG.random.bool(0.75)) {
+			if (FlxG.random.bool(2))
 				waterDrops.add(new WaterDrop(this));
-			}
 		}, 0);
 	}
 

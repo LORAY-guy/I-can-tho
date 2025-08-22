@@ -11,7 +11,7 @@ class RoomPartsAndService extends BaseRoom
     var flickeringLight:FlxSprite;
     var lightSound:FlxSound;
 
-    override function create():Void
+    override public function create():Void
     {
         super.create();
 

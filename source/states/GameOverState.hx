@@ -8,14 +8,18 @@ package states;
  */
 class GameOverState extends FlxUIState
 {
+    public var controls(get, never):Controls;
+    private function get_controls() return Controls.instance;
+
     var gameOver:FlxSprite;
     var gameOverCoolOverlay:FlxSprite;
     var bufferOverlay:FlxSprite;
 
     var sound:FlxSound;
-    var timer:FlxTimer = new FlxTimer();
+    var timer:FlxTimer;
 
     var goldenDeath:Bool = false;
+    var canSkip:Bool = false;
 
     public function new(goldenDeath:Bool = false):Void
     {
@@ -26,6 +30,8 @@ class GameOverState extends FlxUIState
     override function create():Void
     {
         super.create();
+
+        timer = new FlxTimer();
 
         var jumpscareSound = 'XSCREAM' + (goldenDeath ? 'GOLDEN' : '');
         FlxG.sound.play(Paths.sound(jumpscareSound), 0.7, false, FlxG.sound.defaultSoundGroup, true, function() {
@@ -41,11 +47,12 @@ class GameOverState extends FlxUIState
             gameOverCoolOverlay.y -= 10;
             gameOverCoolOverlay.alpha = 0.8;
             gameOverCoolOverlay.blend = ADD;
+            gameOverCoolOverlay.antialiasing = false;
             add(gameOverCoolOverlay);
     
             gameOverCoolOverlay.animation.finishCallback = function(name:String) {
-                gameOverCoolOverlay.destroy();
-                gameOverCoolOverlay = null;
+                gameOverCoolOverlay.visible = false;
+                canSkip = true;
             };
     
             bufferOverlay = new FlxSprite();
@@ -60,14 +67,19 @@ class GameOverState extends FlxUIState
             FlxG.camera.flash(FlxColor.WHITE, 0.8);
             sound = new FlxSound().loadEmbedded(Paths.sound('stare')).play();
     
-            timer.start(5, function(tmr:FlxTimer) {
-                bufferOverlay.alpha = 0.05;
-                gameOverCoolOverlay.animation.play('Idle');
-    
+            if (timer != null) {
                 timer.start(5, function(tmr:FlxTimer) {
-                    voidBeforeRestart();
+                    if (bufferOverlay != null)
+                        bufferOverlay.alpha = 0.05;
+
+                    if (gameOverCoolOverlay != null)
+                        gameOverCoolOverlay.animation.play('Idle');
+        
+                    timer.start(5, function(tmr:FlxTimer) {
+                        voidBeforeRestart();
+                    });
                 });
-            });
+            }
         }).endTime = FlxG.random.float(2000, 3000);
     }
 
@@ -75,8 +87,9 @@ class GameOverState extends FlxUIState
     {
         super.update(elapsed);
 
-        if (gameOverCoolOverlay == null && PlayState.instance.controls.ACCEPT) {
-            timer.cancel();
+        if (controls.ACCEPT && canSkip) {
+            if (timer != null)
+                timer.cancel();
             voidBeforeRestart();
         }
     }
@@ -84,8 +97,13 @@ class GameOverState extends FlxUIState
     private function voidBeforeRestart():Void //To avoid making the transition unexpected and brutally thrown at the player's face
     {
         FlxG.camera.visible = false;
-        sound.stop();
-        sound.destroy();
+
+        if (sound != null) {
+            sound.stop();
+            sound.destroy();
+            sound = null;
+        }
+
         new FlxTimer().start(1, function(tmr:FlxTimer) {
             FlxG.switchState(new PlayState());
         });

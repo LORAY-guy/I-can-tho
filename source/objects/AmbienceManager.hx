@@ -34,9 +34,9 @@ class AmbienceManager
         if (name != null) {
             selectedMusic = name;
         } else {
-            var musicFolder:Array<String> = FileSystem.readDirectory('assets/music/game');
-            musicFolder.remove('void.${Paths.SOUND_EXT}');
-            selectedMusic = musicFolder[FlxG.random.int(0, musicFolder.length - 1)];
+            do {
+                selectedMusic = CoolUtil.musicFolder[FlxG.random.int(0, CoolUtil.musicFolder.length - 1)];
+            } while (selectedMusic == "void");
             selectedMusic = selectedMusic.split('.' + Paths.SOUND_EXT)[0];
         }
         musicPlayer.loadEmbedded(Paths.music('game/$selectedMusic'));
@@ -92,8 +92,7 @@ class AmbienceManager
 
     public function playAmbienceSound():Void
     {
-        var ambienceFolder:Array<String> = FileSystem.readDirectory('assets/sounds/ambience');
-        var selectedAmbience:String = ambienceFolder[FlxG.random.int(0, ambienceFolder.length - 1)];
+        var selectedAmbience:String = CoolUtil.soundsFolder[FlxG.random.int(0, CoolUtil.soundsFolder.length - 1)];
         selectedAmbience = selectedAmbience.split('.' + Paths.SOUND_EXT)[0];
         soundPlayer.loadEmbedded(Paths.sound('ambience/$selectedAmbience'));
         soundPlayer.play();
@@ -149,15 +148,19 @@ class AmbienceManager
     public function adjustMusicVolume(newFactor:Float, ?time:Float = 1):Void
     {
         if (musicPlayer != null && musicPlayer.playing) {
+            if (fadeTween != null && fadeTween.active)
+                fadeTween.cancel();
             factor = newFactor;
-            musicPlayer.fadeOut(time, (DEFAULT_VOLUME * UserPrefs.data.musicVolume) * factor);
+            FlxTween.tween(musicPlayer, {volume: (DEFAULT_VOLUME * UserPrefs.data.musicVolume) * factor}, time);
         }
     }
-
+    
     public function resetMusicVolume(?time:Float = 1):Void
     {
         if (musicPlayer != null && musicPlayer.playing) {
-            musicPlayer.fadeIn(time, musicPlayer.volume, (DEFAULT_VOLUME * UserPrefs.data.musicVolume) * factor);
+            if (fadeTween != null && fadeTween.active)
+                fadeTween.cancel();
+            FlxTween.tween(musicPlayer, {volume: (DEFAULT_VOLUME * UserPrefs.data.musicVolume) * 1}, time);
             factor = 1;
         }
     }

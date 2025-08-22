@@ -15,8 +15,6 @@ import flash.media.Sound;
  * ### Paths
  *
  * Manages assets and file locations.
- *
- * Again, ~~stolen~~ *borrowed* from Psych Engine and modified.
  */
 class Paths {
     inline public static var SOUND_EXT = #if web "mp3" #else "ogg" #end;
@@ -109,10 +107,6 @@ class Paths {
             }
         }
         return null;
-    }
-
-    inline static public function imageRandom(key:String, min:Int, max:Int) {
-        return image(key + FlxG.random.int(min, max));
     }
 
     inline static public function video(key:String)
@@ -223,6 +217,7 @@ class Paths {
         }
     }
 
+    #if !html5
     public static function cacheAllAssets():Void {
         cacheAssetsInDirectory('assets/images', 'png', 'image');
         cacheAssetsInDirectory('assets/music', SOUND_EXT, 'music');
@@ -243,8 +238,11 @@ class Paths {
                         image(key);
                     case 'sound':
                         sound(key);
+                    case 'music':
+                        music(key);
                 }
             }
         }
     }
+    #end
 }

@@ -4,8 +4,6 @@ package backend;
  * ### Controls
  * 
  * Manages inputs.
- *
- * Definitly not stolen from Psych Engine.
  */
 class Controls
 {
@@ -17,6 +15,7 @@ class Controls
     public var MASK_P(get, never):Bool;
 	public var SPRINT_P(get, never):Bool;
 	public var STAB_P(get, never):Bool;
+	public var MUTE_P(get, never):Bool;
 
 	private function get_UP_P() return justPressed('up');
 	private function get_DOWN_P() return justPressed('down');
@@ -26,6 +25,7 @@ class Controls
 	private function get_MASK_P() return justPressed('mask');
 	private function get_SPRINT_P() return justPressed('sprint');
 	private function get_STAB_P() return justPressed('stab');
+	private function get_MUTE_P() return justPressed('mute');
 
 	// Held buttons (directions)
 	public var UP(get, never):Bool;

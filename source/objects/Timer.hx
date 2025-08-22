@@ -2,7 +2,7 @@ package objects;
 
 class Timer extends FlxText
 {
-    private var elapsedTime:Float = 0;
+    private static var elapsedTime:Float = 0;
     private var timeStop:Bool = false;
 
     public function new(x:Float, y:Float, font:String, size:Int, color:Int)

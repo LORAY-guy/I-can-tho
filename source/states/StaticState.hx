@@ -1,18 +1,13 @@
 package states;
 
-/**
- * ### StaticState
- * The "cutscene" state.
- * Just plays the static effect.
- *
- * This is the first loaded state when the game is launched.
- */
 class StaticState extends FlxUIState
 {
     public static var loaded:Bool = false;
 
     override public function create():Void
     {
+        Paths.clearStoredMemory();
+
         super.create();
 
         var spr:FlxSprite = new FlxSprite();
@@ -26,8 +21,16 @@ class StaticState extends FlxUIState
         add(spr);
 
         FlxG.sound.play(Paths.sound('glitch'), 1, false, FlxG.sound.defaultSoundGroup, true, function() {
-            if (!loaded) loadAssets();
-            else FlxG.switchState(new PlayState());
+            if (!loaded) {
+                var loadingTxt:FlxText = new FlxText(0, 0, 0, 'Loading...', 16);
+                loadingTxt.setFormat(Paths.font("fnaf3.ttf"), 16);
+                loadingTxt.screenCenter();
+                add(loadingTxt);
+
+                loadAssets();
+                #if html5 loaded = true; #end
+            } else
+                FlxG.switchState(new PlayState());
         });
     }
 
@@ -39,10 +42,12 @@ class StaticState extends FlxUIState
             FlxG.fullscreen = FlxG.save.data.fullscreen;
         }
 
+        #if !html5
         if (UserPrefs.data.cacheOnGPU && !loaded) {
             Paths.cacheAllAssets();
             loaded = true;
         }
+        #end
 
         #if !mobile
         Main.fpsVar.visible = UserPrefs.data.showFPS;

@@ -21,8 +21,6 @@ import flixel.input.gamepad.FlxGamepadInputID;
  * ### UserPrefs
  * 
  * Manages controls and various game saves.
- * 
- * ~~stolen~~ *borrowed* from Psych Engine as well, sorry mate, your stuff is just way too useful to not use.
  */
 class UserPrefs {
     public static var muteKeys:Array<FlxKey> = [FlxKey.ZERO];
@@ -32,9 +30,7 @@ class UserPrefs {
 	public static var data:SaveVariables = {};
 	public static var defaultData:SaveVariables = {};
 
-	//Every key has two binds, add your key bind down here and then add your control on options/ControlsSubState.hx and Controls.hx
 	public static var keyBinds:Map<String, Array<FlxKey>> = [
-		//Key Bind, Name for ControlsSubState
 		'up'		    => [UP],
 		'left'		    => [LEFT],
 		'down'		    => [DOWN],
@@ -43,6 +39,7 @@ class UserPrefs {
         'mask'          => [CONTROL],
 		'sprint'		=> [SHIFT],
 		'stab'			=> [X],
+		'mute'			=> [M],
 		
 		'accept'		=> [SPACE],
 		'back'			=> [BACKSPACE, ESCAPE],
@@ -62,6 +59,7 @@ class UserPrefs {
         'mask'          => [LEFT_TRIGGER],
 		'sprint'		=> [LEFT_STICK_CLICK],
 		'stab'			=> [X],
+		'mute'			=> [Y],
 		
 		'accept'		=> [A, START],
 		'back'			=> [B],
@@ -98,7 +96,7 @@ class UserPrefs {
 		defaultButtons = gamepadBinds.copy();
 	}
 
-	public static function saveSettings(?showDance:Bool = true) {
+	public static function saveSettings() {
 		for (key in Reflect.fields(data))
 			Reflect.setField(FlxG.save.data, key, Reflect.field(data, key));
 	
@@ -171,6 +169,7 @@ class UserPrefs {
 		volumeUpKeys = keyBinds.get('volume_up').copy();
 		toggleVolumeKeys(true);
 	}
+
 	public static function toggleVolumeKeys(?turnOn:Bool = true)
 	{
 		FlxG.sound.muteKeys = turnOn ? muteKeys : [];

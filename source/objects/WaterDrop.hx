@@ -32,6 +32,10 @@ class WaterDrop extends FlxSprite
     override function update(elapsed:Float):Void
     {
         super.update(elapsed);
+
+        if (!active)
+            return;
+        
         if (PlayState.instance.paused && updateDelay.active) updateDelay.cancel();
         if (!PlayState.instance.paused && !updateDelay.active) updateDelay.start();
     }

@@ -1,5 +1,7 @@
 package states;
 
+import flixel.addons.ui.FlxUIState;
+
 /**
  * ### Final Cutscene State
  *
@@ -23,8 +25,14 @@ class FinalCutsceneState extends FlxUIState
 
     override function create():Void
     {
+        Paths.clearStoredMemory();
+
+        UserPrefs.loadPrefs();
+
+        FlxG.drawFramerate = UserPrefs.data.framerate;
+        FlxG.updateFramerate = UserPrefs.data.framerate;
+
         FlxG.mouse.visible = false;
-        FlxG.camera.visible = true;
 
         camVideo = new FlxCamera();
         camVideo.bgColor.alpha = 0;
@@ -41,7 +49,9 @@ class FinalCutsceneState extends FlxUIState
         add(creditsText);
 
         musicPlayer.loadEmbedded(Paths.music('finale'));
-        musicPlayer.play();
+        new FlxTimer().start(0.1, function(tmr:FlxTimer) {
+            musicPlayer.play();
+        });
 
         playVideo('finale');
     }
@@ -152,7 +162,7 @@ class FinalCutsceneState extends FlxUIState
                 FlxTween.tween(creditsText, {alpha: 0}, 8);
                 musicPlayer.fadeOut(8, 0, function(twn:FlxTween) {
                     new FlxTimer().start(0.5, function(tmr:FlxTimer) {
-                        CoolUtil.exitGame();
+                        FlxG.switchState(new states.MainMenuState(true));
                     }); 
                 });
         }

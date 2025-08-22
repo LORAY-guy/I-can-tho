@@ -7,7 +7,7 @@ class RoomFinale2 extends BaseRoom
     var wallBottom:FlxSprite;
     var wallBottomRight:FlxSprite;
 
-    override function create():Void
+    override public function create():Void
     {
         super.create();
     

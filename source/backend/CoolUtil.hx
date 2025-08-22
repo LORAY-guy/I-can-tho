@@ -10,8 +10,29 @@ class CoolUtil
 	public static var tutorialMode:Bool = true;
 	public static var deathCounter:Int = 0;
 
+	public static var soundsFolder:Array<String> = [
+		"ambience2",
+		"circus",
+		"foxySong",
+		"In_The_Depths_C",
+		"pots1",
+		"pots2",
+		"pots3",
+		"pots4"
+	];
+
+	public static var musicFolder:Array<String> = [
+		"Hybernating Evil",
+		"Last Breath",
+		"Sleep No More",
+		"Sonata For The Fallen",
+		"void",
+		"Where Dreams Die"
+	];
+
     @:access(flixel.util.FlxSave.validate)
-	inline public static function getSavePath():String {
+	inline public static function getSavePath():String
+	{
 		final company:String = FlxG.stage.application.meta.get('company');
 		// #if (flixel < "5.0.0") return company; #else
 		return '${company}/${flixel.util.FlxSave.validate(FlxG.stage.application.meta.get('file'))}';
@@ -28,6 +49,11 @@ class CoolUtil
 		var wrapped:Float = degrees % 360;
 		if (wrapped < 0) wrapped += 360;
 		return wrapped;
+	}
+
+	inline public static function browserLoad(site:String):Void
+	{
+		FlxG.openURL(site);
 	}
 
 	inline public static function handlePropCollision(obj:FlxSprite):Void
@@ -99,10 +125,8 @@ class CoolUtil
 		Sys.exit(0);
 		#elseif html5
 		js.Browser.window.close();
-		#elseif linux
-		Sys.command('pkill "I can, tho"');
-		#elseif mac
-		Sys.command('pkill -f "I can, tho"');
+		#elseif (linux || mac)
+		Sys.command('pkill', ["-f", "I can, tho"]);
 		#end
 	}
 }

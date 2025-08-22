@@ -9,8 +9,6 @@ import hxdiscord_rpc.Types;
  * ### Discord
  *
  * Manages Discord RPC.
- * 
- * Yeah, that one is definitly stolen from Psych Engine. Sorry, ShadowMario.
  */
 class DiscordClient
 {
@@ -94,7 +92,7 @@ class DiscordClient
 		presence.details = details;
 		presence.state = state;
 		presence.largeImageKey = 'icon';
-		presence.largeImageText = "PizzaScape";
+		presence.largeImageText = "ICanTho";
 		presence.smallImageKey = smallImageKey;
 		presence.startTimestamp = Std.int(startTimestamp / 1000);
 		presence.endTimestamp = Std.int(endTimestamp / 1000);

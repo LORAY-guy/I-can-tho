@@ -10,7 +10,7 @@ class RoomCornerRight extends BaseRoom
     var wallBottomLeft:FlxSprite;
     var wallBottomRight:FlxSprite;
 
-    override function create() 
+    override public function create():Void
     {
         super.create();
 

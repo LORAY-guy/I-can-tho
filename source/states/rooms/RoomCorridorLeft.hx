@@ -9,7 +9,7 @@ class RoomCorridorLeft extends BaseRoom
     var wallBottomLeft:FlxSprite;
     var wallBottomRight:FlxSprite;
 
-    override function create() 
+    override public function create():Void
     {
         super.create();
     
@@ -22,7 +22,7 @@ class RoomCorridorLeft extends BaseRoom
         wallBottomLeft = createWall(360, 200, 0, FlxG.height - 200);
         wallBottomRight = createWall(360, 80, FlxG.width - 360, FlxG.height - 80);
 
-        var exit1:Exit = new Exit('RoomFoxyCurtain', wallTopLeft.width, 0, Std.int(FlxG.width - (360 * 2)), 1, new FlxPoint(-1, FlxG.height - ourple.height - 2)); //Top Exit
+        var exit1:Exit = new Exit('RoomFoxyCurtain', wallTopLeft.width, 0, Std.int((FlxG.width - (360 * 2)) - ourple.width - 70), 1, new FlxPoint(-1, FlxG.height - ourple.height - 2)); //Top Exit
         add(exit1);
         exits.push(exit1);
 

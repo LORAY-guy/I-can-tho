@@ -16,7 +16,7 @@ class Room3 extends BaseRoom
 
     public var seenAnimatronicsOnStage:Bool = false;
 
-    override function create():Void
+    override public function create():Void
     {
         super.create();
 
@@ -71,6 +71,7 @@ class Room3 extends BaseRoom
             new FlxTimer().start(4, function(tmr:FlxTimer) {
                 flickeringSound.play();
                 ourple.lockedControls = true;
+                ourple.velocity.zero();
                 FlxFlicker.flicker(PlayState.instance.flicker, 1, 0.25, true, false, function(flick:FlxFlicker) {
                     CoolUtil.tutorialMode = false;
                     PlayState.instance.enableAnimatronics();

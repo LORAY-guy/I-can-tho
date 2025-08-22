@@ -24,7 +24,7 @@ class RoomAfton extends BaseRoom
     var child3:FlxSprite;
     var child4:FlxSprite;
 
-    override function create() 
+    override public function create():Void
     {
         super.create();
     
@@ -136,6 +136,8 @@ class RoomAfton extends BaseRoom
         {
             exit.locked = true;
             ourple.lockedControls = true;
+            ourple.velocity.zero();
+            ourple.animation.play('Up');
 
             afton.animation.play('Running');
             afton.animation.callback = function(name:String, frame:Int, frameIndex:Int)

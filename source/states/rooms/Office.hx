@@ -12,7 +12,7 @@ class Office extends BaseRoom
     var office:FlxSprite;
     var officeSound:FlxSound;
 
-    override function create() 
+    override public function create():Void
     {
         super.create();
     

@@ -13,7 +13,7 @@ class Room6 extends BaseRoom
     var flickeringLight:FlxSprite;
     var flickeringSound:FlxSprite;
 
-    override function create()
+    override public function create():Void
     {
         super.create();
 

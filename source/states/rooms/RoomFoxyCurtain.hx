@@ -10,7 +10,7 @@ class RoomFoxyCurtain extends BaseRoom
     var wallBottomRight:FlxSprite;
     var wallBottomRight2:FlxSprite;
 
-    override function create()
+    override public function create():Void
     {
         super.create();
 

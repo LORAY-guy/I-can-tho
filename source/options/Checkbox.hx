@@ -3,20 +3,24 @@ package options;
 class Checkbox extends FlxSpriteGroup
 {
     private var isChecked:Bool;
-    private var checkedImage:String;
-    private var uncheckedImage:String;
     private var varName:String;
 
     public var callback:Void->Void = null;
 
-    var checkboxSprite:FlxSprite;
-    var optionName:FlxText;
+    private var checkboxSprite:FlxSprite;
+    private var optionName:FlxText;
+    private var hoverSprite:FlxSprite;
 
     public function new(x:Float, y:Float, name:String, varName:String, isChecked:Bool = true)
     {
         super(x, y);
         this.isChecked = isChecked;
         this.varName = varName;
+
+        hoverSprite = new FlxSprite(0, 0).makeGraphic(250, 40, FlxColor.GREEN);
+        hoverSprite.alpha = 0.2;
+        hoverSprite.visible = false;
+        add(hoverSprite);
 
         checkboxSprite = new FlxSprite(0, -10);
         checkboxSprite.loadGraphic(Paths.image('pause/check'));
@@ -31,6 +35,11 @@ class Checkbox extends FlxSpriteGroup
         add(optionName);
 
         checkboxSprite.x = optionName.x + optionName.width + 10;
+        
+        hoverSprite.setGraphicSize(Std.int(optionName.width + checkboxSprite.width + 32), 40);
+        hoverSprite.updateHitbox();
+        hoverSprite.x = optionName.x - 10;
+        hoverSprite.y = optionName.y - 4;
     }
 
     public function toggle():Void
@@ -48,9 +57,12 @@ class Checkbox extends FlxSpriteGroup
 
         if (FlxG.mouse.overlaps(this)) {
             optionName.color = FlxColor.GREEN;
+            hoverSprite.visible = true;
+            
             if (FlxG.mouse.justPressed) toggle();
         } else {
             optionName.color = FlxColor.WHITE;
+            hoverSprite.visible = false;
         }
     }
 }

@@ -8,8 +8,8 @@ package objects;
  */
 class Ourple extends FlxSprite
 {
-    public var MOVE_SPEED:Float = 160;
-    public var SPRINT_SPEED:Float = 270;
+    public var MOVE_SPEED:Float = 210;
+    public var SPRINT_SPEED:Float = 290;
     public var MAX_STAMINA:Float = 100;
     public var currentStamina:Float = 100;
 
@@ -22,8 +22,7 @@ class Ourple extends FlxSprite
     public var allowSprint:Bool = true;
     public var dead:Bool = false;
     public var hasKey:Bool = false;
-
-    public var lockedControls:Bool = false;
+    public var lockedControls:Bool = true;
     public var caseOhMode:Bool = false;
 
     public var breathing:FlxSound = new FlxSound();
@@ -42,12 +41,11 @@ class Ourple extends FlxSprite
         animation.play("Idle");
         scale.set(1.2, 1.2);
         updateHitbox();
-
         breathing.loadEmbedded(Paths.sound('deepbreaths'), true);
         FlxG.sound.defaultSoundGroup.add(breathing);
         breathing.volume = 0;
     }
-
+    
     public function handleInput():Void
     {
         if (!lockedControls)
@@ -80,6 +78,11 @@ class Ourple extends FlxSprite
                         animation.play("Down");
                         isMoving = true;
                     }
+
+                    if (velocity.x != 0 && velocity.y != 0) {
+                        velocity.x /= 1.25;
+                        velocity.y /= 1.25;
+                    }
             
                     if (allowSprint && PlayState.instance.controls.SPRINT && isMoving && currentStamina > 0) {
                         velocity.x *= SPRINT_SPEED / MOVE_SPEED;
@@ -106,7 +109,7 @@ class Ourple extends FlxSprite
                     flipX = false;
                 }
             }
-        
+
             if (PlayState.instance.controls.MASK && !maskOn && animation.curAnim.name != "Stab") {
                 toggleMaskOn();
             } else if (PlayState.instance.controls.MASK_R && maskOn && animation.curAnim.name != "Stab") {
@@ -120,8 +123,20 @@ class Ourple extends FlxSprite
     override public function update(elapsed:Float):Void
     {
         super.update(elapsed);
+
         handleInput();
         updateStamina(elapsed);
+        mapBarriers();
+
+        isMoving = !velocity.isZero();
+    }
+
+    private function mapBarriers():Void
+    {
+        if (y < -80) {
+            y = -80;
+            velocity.y = 0;
+        }
     }
 
     public function toggleMaskOn(on:Bool = true):Void
@@ -131,13 +146,13 @@ class Ourple extends FlxSprite
             animation.play("MaskOn");
             breathing.play();
             breathing.fadeIn(1, 0, 0.7);
-            FlxG.sound.play(Paths.sound('maskon'), 0.45);
+            FlxG.sound.play(Paths.sound('maskon'), 0.4);
             velocity.set(0, 0);
         } else {
             animation.play("Idle");
             breathing.stop();
             breathing.volume = 0;
-            FlxG.sound.play(Paths.sound('maskoff'), 0.45);
+            FlxG.sound.play(Paths.sound('maskoff'), 0.4);
         }
     }
 
@@ -228,7 +243,7 @@ class Ourple extends FlxSprite
             if (!PlayState.instance.controls.SPRINT || velocity.isZero()) {
                 currentStamina += staminaRegenRate * (maskOn ? 1.5 : 1) * elapsed;
             }
-    
+
             currentStamina = Math.max(0, Math.min(currentStamina, MAX_STAMINA));
         }
     }

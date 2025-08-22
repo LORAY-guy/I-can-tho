@@ -16,7 +16,7 @@ class Room8 extends BaseRoom
 
     public var matpatDoor:FlxSprite;
 
-    override public function create()
+    override public function create():Void
     {
         super.create();
 
@@ -60,7 +60,7 @@ class Room8 extends BaseRoom
         add(exit3);
         exits.push(exit3);
 
-        exit4 = new Exit('RoomFinale1', matpatDoor.x, matpatDoor.y, 1, Std.int(matpatDoor.height), new FlxPoint(114, -1), function() {return ourple.hasKey;}); //Right Exit
+        exit4 = new Exit('Finale', matpatDoor.x, matpatDoor.y, 1, Std.int(matpatDoor.height), new FlxPoint(114, -1), function() {return ourple.hasKey;}); //Right Exit
         add(exit4);
         exits.push(exit4);
     }

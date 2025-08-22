@@ -47,6 +47,7 @@ class Exit extends FlxSprite
         if (PlayState.instance.ourple.overlaps(this))
         {
             if (!locked && (requirementFunction == null || requirementFunction())) {
+                if (destination == "Finale") return switchToFinale();
                 if (callback != null) callback();
                 PlayState.instance.onExitRoom();
                 if (errAdded) {
@@ -90,6 +91,23 @@ class Exit extends FlxSprite
         #if debug
         makeGraphic(Std.int(this.width), Std.int(this.height), (locked ? 0xFFFF0000 : 0xFF00FF00));
         #end
+    }
+
+    private function switchToFinale():Void
+    {
+        var time:Float = PlayState.instance.timer.getTimeElapsed();
+
+        PlayState.instance.ourple.visible = false;
+        PlayState.instance.ourple.x -= 15;
+        PlayState.instance.ourple.lockedControls = true;
+        PlayState.instance.ourple.velocity.set(0, 0);
+        FlxG.sound.play(Paths.sound('keyUnlock'), 0.4);
+        FlxTween.tween(PlayState.instance.room8.matpatDoor, {alpha: 0}, 2, {ease: FlxEase.quadInOut, onComplete: function(twn:FlxTween) {
+            FlxG.camera.fade(FlxColor.BLACK, 1, false, function() {
+                PlayState.instance.disableEverything();
+                FlxG.switchState(new states.DarkHallwayState(time));
+            });
+        }, startDelay: 2});
     }
 
     override public function destroy():Void

@@ -124,7 +124,7 @@ class CryingChild extends FlxSprite
     private function canSeePlayer():Bool
     {
         var dx:Float = player.x - this.x;
-        var dy:Float = player.y - this.y;
+        var dy:Float = player.y + (player.height / 2) - this.y;
         var dw:Float = player.width - this.width * 2;
         var dh:Float = player.height - this.height * 2;
 
@@ -204,6 +204,7 @@ class CryingChild extends FlxSprite
         {
             isFacingPlayer = false;
             escaping = true;
+            determineEscapeAnimation();
             runningSound.play();
             PlayState.instance.ambienceManager.pause();
         }
@@ -228,6 +229,26 @@ class CryingChild extends FlxSprite
             }
         }
         isFacingPlayer = facePlayer;
+    }
+
+    private function determineEscapeAnimation():Void
+    {
+        var dx:Float = closestExit.x - this.x;
+        var dy:Float = closestExit.y - this.y;
+
+        if (Math.abs(dx) > Math.abs(dy)) {
+            if (dx > 0) {
+                animation.play("Right");
+            } else {
+                animation.play("Left");
+            }
+        } else {
+            if (dy > 0) {
+                animation.play("Down");
+            } else {
+                animation.play("Up");
+            }
+        }
     }
 
     var walkCounter:Int = 0;
@@ -268,7 +289,6 @@ class CryingChild extends FlxSprite
         var directionX:Float = ((closestExit.x + (closestExit.width / 2)) - (this.width / 2) >= this.x) ? 1 : -1;
         var directionY:Float = ((closestExit.y + (closestExit.height / 2)) - (this.height / 2) >= this.y) ? 1 : -1;
         velocity.set(directionX * escapeSpeed, directionY * escapeSpeed);
-        updateChildAnimation();
     }
 
     public function stopEscaping():Void
@@ -394,24 +414,6 @@ class CryingChild extends FlxSprite
         }
 
         destroy();
-    }
-
-    private function updateChildAnimation():Void
-    {
-        if (escaping)
-        {
-            if (velocity.isZero()) {
-                animation.play("Idle");
-            } else {
-                if (Math.abs(velocity.x) > Math.abs(velocity.y)) {
-                    if (velocity.x >= 0) animation.play("Right");
-                    else if (velocity.x < 0) animation.play("Left");
-                } else {
-                    if (velocity.y >= 0) animation.play("Down");
-                    else if (velocity.y < 0) animation.play("Up");
-                }
-            }
-        }
     }
 
     override function destroy():Void

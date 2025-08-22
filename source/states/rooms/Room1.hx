@@ -4,7 +4,7 @@ class Room1 extends BaseRoom
 {
     public var exit:Exit;
 
-    override function create():Void
+    override public function create():Void
     {
         super.create();
 

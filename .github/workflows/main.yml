@@ -45,6 +45,10 @@ jobs:
           haxelib set flixel-ui 2.6.3
           haxelib install flixel-addons 3.3.2
           haxelib set flixel-addons 3.3.2
+      - name: Install VLC Libraries and Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libvlc-dev vlc-bin
       - name: Install hxvlc 2.2.1
         run: |
           haxelib install hxvlc 2.2.1
@@ -103,6 +107,10 @@ jobs:
       - name: Install hxCodec 3.0.2
         run: |
           haxelib install hxCodec 3.0.2
+        shell: cmd
+      - name: Install VLC (Windows)
+        run: |
+          choco install vlc
         shell: cmd
       - name: Install hxvlc 2.2.1
         run: |
@@ -165,6 +173,9 @@ jobs:
       - name: Install hxCodec 3.0.2
         run: |
           haxelib install hxCodec 3.0.2
+      - name: Install VLC (macOS)
+        run: |
+          brew install vlc
       - name: Install hxvlc 2.2.1
         run: |
           haxelib install hxvlc 2.2.1

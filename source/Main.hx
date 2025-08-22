@@ -10,6 +10,10 @@ import openfl.display.Sprite;
 import debug.FPSCounter;
 #end
 
+#if (windows || mac)
+import lime.app.Application;
+#end
+
 #if linux
 import lime.graphics.Image;
 @:cppInclude('./external/gamemode_client.h')

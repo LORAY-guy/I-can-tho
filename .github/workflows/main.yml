@@ -55,6 +55,7 @@ jobs:
       - name: Install hscript 2.5.0
         run: |
           haxelib install hscript 2.5.0
+          haxelib set hscript 2.5.0
       - name: Install other libraries
         run: |
           haxelib install --quiet hxdiscord_rpc 1.2.4
@@ -77,6 +78,11 @@ jobs:
       - uses: krdlab/setup-haxe@v2
         with:
           haxe-version: 4.3.4
+      - name: Setup Haxelib
+        run: |
+          haxelib install hxnodejs
+          haxelib setup C:\haxelib
+        shell: cmd
       - name: Install hxcpp 4.3.2
         run: |
           haxelib install hxcpp 4.3.2
@@ -119,6 +125,7 @@ jobs:
       - name: Install hscript 2.5.0
         run: |
           haxelib install hscript 2.5.0
+          haxelib set hscript 2.5.0
         shell: cmd
       - name: Install other libraries
         run: |
@@ -182,6 +189,7 @@ jobs:
       - name: Install hscript 2.5.0
         run: |
           haxelib install hscript 2.5.0
+          haxelib set hscript 2.5.0
       - name: Install other libraries
         run: |
           haxelib install --quiet hxdiscord_rpc 1.2.4

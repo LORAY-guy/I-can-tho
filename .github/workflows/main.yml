@@ -48,7 +48,7 @@ jobs:
       - name: Install VLC Libraries and Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libvlc-dev vlc-bin
+          sudo apt-get install -y libvlc-dev vlc-bin vlc-plugin-base libvlccore-dev
       - name: Install hxvlc 2.2.1
         run: |
           haxelib install hxvlc 2.2.1

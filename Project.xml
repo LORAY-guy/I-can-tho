@@ -9,6 +9,7 @@
 
     <!-- ______________________ I CAN, THO CUSTOMIZATION ______________________ -->
 
+	<define name="DISCORD_ALLOWED" if="desktop" unless="32bits"/>
 	<define name="VIDEOS_ALLOWED" if="desktop" unless="32bits"/>
 
 	<!-- ____________________________ Window Settings ___________________________ -->

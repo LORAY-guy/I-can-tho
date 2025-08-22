@@ -48,9 +48,12 @@ jobs:
       - name: Install hxvlc 2.2.1
         run: |
           haxelib install hxvlc 2.2.1
+      - name: Install hscript 2.5.0
+        run: |
+          haxelib install hscript 2.5.0
       - name: Install other libraries
         run: |
-          haxelib git hxdiscord_rpc https://github.com/MAJigsaw77/hxdiscord_rpc
+          haxelib install --quiet hxdiscord_rpc 1.2.4
       - name: List Installed Haxelibs
         run: haxelib list
       - name: Create Version Tag
@@ -105,9 +108,13 @@ jobs:
         run: |
           haxelib install hxvlc 2.2.1
         shell: cmd
+      - name: Install hscript 2.5.0
+        run: |
+          haxelib install hscript 2.5.0
+        shell: cmd
       - name: Install other libraries
         run: |
-          haxelib git hxdiscord_rpc https://github.com/MAJigsaw77/hxdiscord_rpc
+          haxelib install --quiet hxdiscord_rpc 1.2.4
         shell: cmd
       - name: List Installed Haxelibs
         run: haxelib list
@@ -161,9 +168,12 @@ jobs:
       - name: Install hxvlc 2.2.1
         run: |
           haxelib install hxvlc 2.2.1
+      - name: Install hscript 2.5.0
+        run: |
+          haxelib install hscript 2.5.0
       - name: Install other libraries
         run: |
-          haxelib git hxdiscord_rpc https://github.com/MAJigsaw77/hxdiscord_rpc
+          haxelib install --quiet hxdiscord_rpc 1.2.4
       - name: List Installed Haxelibs
         run: haxelib list
       - name: Create Version Tag

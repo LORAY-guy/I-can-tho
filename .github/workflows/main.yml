@@ -183,6 +183,11 @@ jobs:
       - name: Install VLC (macOS)
         run: |
           brew install vlc
+          mkdir -p /Users/runner/haxelib/hxCodec/3,0,2/project/vlc/dll/MacOS/lib/
+          ln -sf /opt/homebrew/lib/libvlc.dylib /Users/runner/haxelib/hxCodec/3,0,2/project/vlc/dll/MacOS/lib/libvlc.dylib || true
+          ln -sf /opt/homebrew/lib/libvlccore.dylib /Users/runner/haxelib/hxCodec/3,0,2/project/vlc/dll/MacOS/lib/libvlccore.dylib || true
+          ln -sf /usr/local/lib/libvlc.dylib /Users/runner/haxelib/hxCodec/3,0,2/project/vlc/dll/MacOS/lib/libvlc.dylib || true
+          ln -sf /usr/local/lib/libvlccore.dylib /Users/runner/haxelib/hxCodec/3,0,2/project/vlc/dll/MacOS/lib/libvlccore.dylib || true
       - name: Install hxvlc 2.2.1
         run: |
           haxelib install hxvlc 2.2.1
